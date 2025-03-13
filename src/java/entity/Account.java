@@ -27,13 +27,6 @@ public class Account {
         this.role = role;
     }
 
-    // Constructor dùng để đăng ký (không cần role và accountId)
-    public Account(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
-
     public int getAccountId() {
         return accountId;
     }
@@ -73,5 +66,7 @@ public class Account {
     public void setRole(boolean role) {
         this.role = role;
     }
-
+     
+    
+    
 }
