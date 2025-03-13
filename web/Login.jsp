@@ -14,50 +14,20 @@
     <body>
         <div class="container" id="container">
             <div class="form-container register-container">
-               
-
-                <form action="register" method="post" onsubmit="return validateRegisterForm()">
+                <form action="signup" method="post">
                     <h1>Register here.</h1>
-                    <input name="username" type="text" id="register-username" placeholder="User name" required="" autofocus="">
-                    <input name="email" type="email" id="email" placeholder="Email" required="" autofocus="">
-                    <input name="password" type="password" id="register-password" placeholder="Password" required autofocus="">
-                    <input name="repass" type="password" id="register-repass" placeholder="Repeat Password" required autofocus="">
-
-                    <!-- Ch? này ?? hi?n th? l?i n?u password không kh?p -->
-                    <span id="error-message" style="color: red;"></span> <br>
-
+                    <input name="username" type="text" id="username" placeholder="User name" required="" autofocus="">
+                    <input name="password" type="password" id="password" placeholder="Password" required autofocus="">
+                    <input name="repass" type="password" id="user-repeatpass" placeholder="Repeat Password" required autofocus="">
                     <button type="submit">Register</button>
                     <span>or use your account</span>
                     <div class="social-container">
                         <a href="#" class="social"><i class="lni lni-google"></i></a>
                     </div>
                 </form>
-
-                <script>
-                    function validateRegisterForm() {
-                        let password = document.getElementById("register-password").value;
-                        let repass = document.getElementById("register-repass").value;
-                        let errorMessage = document.getElementById("error-message");
-
-                        if (password !== repass) {
-                            errorMessage.innerText = "Passwords do not match! Please re-enter!";
-                            return false; // Ng?n form submit
-                        }
-
-                        errorMessage.innerText = ""; // Xóa l?i n?u m?t kh?u h?p l?
-                        return true; // Cho phép submit
-                    }
-                </script>
-
-
             </div>
-            
+
             <div class="form-container login-container">
-                 <c:if test="${not empty error}">
-                <div style="color: red; text-align: center; margin-bottom: 15px;">
-                    ${error}
-                </div>
-            </c:if>
                 <form action="login" method="post" onsubmit="">
                     <h1>Login here.</h1>
                     <input name="username" type="text" id="username" placeholder="Username" required="" autofocus="" />
@@ -69,7 +39,7 @@
                             <label>Remember me</label>
                         </div>
                         <div class="pass-link">
-                            <a href="ForgotPassword.jsp">Forgot your password?</a>
+                            <a href="#">Forgot your password?</a>
                         </div>
                     </div>
                     <button type="submit">Login</button>
@@ -84,7 +54,7 @@
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
                         <h1 class="title">Hello <br> friends</h1>
-                        <p>if You have an account, login here and have fun</p>
+                        <p>if Yout have an account, login here and have fun</p>
                         <button class="ghost" id="login">Login
                             <i class="lni lni-arrow-left login"></i>
                         </button>
