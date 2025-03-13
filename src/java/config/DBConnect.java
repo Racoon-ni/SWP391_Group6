@@ -2,7 +2,6 @@ package config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DBConnect {
@@ -12,6 +11,7 @@ public class DBConnect {
 
     // Kết nối đến database
     public static Connection connect() throws ClassNotFoundException, SQLException {
+        //Khai bao driver
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
