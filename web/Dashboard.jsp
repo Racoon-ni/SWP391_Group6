@@ -63,7 +63,7 @@
         <h4 class="text-center py-3">📊 Dashboard</h4>
         <a href="#"><i class="fas fa-home"></i> Trang chủ</a>
         <a href="#"><i class="fas fa-chart-bar"></i> Báo cáo</a>
-        <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
+        <a href="adminProfile"><i class="fas fa-cog"></i> Cài đặt</a>
         <a href="manageAccount"><i class="fas fa-user"></i> Quản lí người dùng</a>
         <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
     </div>
@@ -162,6 +162,7 @@
                 </table>
             </div>
         </div>
+        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

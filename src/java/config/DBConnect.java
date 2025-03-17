@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DBConnect {
     private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=BookWed;encrypt=true;trustServerCertificate=true;";
     private static final String USER = "sa";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "1";
 
     // Kết nối đến database
     public static Connection connect() throws ClassNotFoundException, SQLException {

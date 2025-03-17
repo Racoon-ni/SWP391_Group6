@@ -86,7 +86,7 @@ public class AccountDAO {
     }
 
     public boolean updateAccount(int accountId, String username, String password, String email) throws SQLException, ClassNotFoundException {
-        String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE accountId = ?";
+        String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE account_id = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -94,6 +94,22 @@ public class AccountDAO {
             stmt.setInt(4, accountId);
             return stmt.executeUpdate() > 0;
         }
+    }
+
+    public boolean updateAccount(int accountId, String full_name, String phone, String address, String image) throws ClassNotFoundException {
+        String sql = "UPDATE Account SET full_name = ?, phone = ?, address = ?, image = ? WHERE account_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, full_name);
+            ps.setString(2, phone);
+            ps.setString(3, address);
+            ps.setString(4, image);
+            ps.setInt(5, accountId);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // Phương thức cập nhật mật khẩu
@@ -162,7 +178,8 @@ public class AccountDAO {
         }
         return false;
     }
-     // Kiểm tra xem username có tồn tại chưa
+    // Kiểm tra xem username có tồn tại chưa
+
     public boolean isAccountExists(String username) throws SQLException, ClassNotFoundException {
         String query = "SELECT COUNT(*) FROM Account WHERE username = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -291,6 +308,5 @@ public class AccountDAO {
         }
         return accountList;
     }
-
 
 }
