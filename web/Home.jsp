@@ -60,7 +60,10 @@
                                     <div class="col-md-6">
                                         <h2 class="display-4 text-dark font-weight-bold">${book.title}</h2>
                                         <p class="lead text-muted">${book.description}</p>
-                                        <a href="BookDetail.jsp?bookId=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
+                                        <c:if test="${not empty book.book_id}">
+                                            <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
+                                        </c:if>
+
                                     </div>
                                 </div>
                             </div>

@@ -165,16 +165,17 @@ public class BookDAO {
         return books;
     }
 
-    // Lấy 5 sách ngẫu nhiên (chỉ lấy ảnh bìa và mô tả)
+    // Lấy 5 sách ngẫu nhiên (gồm cả ID, ảnh bìa và mô tả)
     public List<Map<String, String>> getRandomBooks() {
         List<Map<String, String>> books = new ArrayList<>();
-        String query = "SELECT TOP 5 cover_image, description FROM Books ORDER BY NEWID()";
+        String query = "SELECT TOP 5 book_id, cover_image, description FROM Books ORDER BY NEWID()";
         try {
             conn = new DBConnect().connect();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Map<String, String> book = new HashMap<>();
+                book.put("book_id", String.valueOf(rs.getInt("book_id"))); // Thêm ID vào Map
                 book.put("cover_image", Optional.ofNullable(rs.getString("cover_image")).orElse("./images/default-cover-book-1.jpg"));
                 book.put("description", Optional.ofNullable(rs.getString("description")).orElse("No description available."));
                 books.add(book);
