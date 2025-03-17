@@ -5,7 +5,9 @@
 package controller;
 
 import dao.AccountDAO;
+import dao.UserDAO;
 import entity.Account;
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,7 +65,8 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Khi GET thì điều hướng về trang đăng ký
+        request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
     /**
@@ -76,48 +80,88 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         response.setContentType("text/html;charset=UTF-8");
 
         // Lấy dữ liệu từ form
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String fullname = request.getParameter("fullname");
+        String address = request.getParameter("address");
+        String image = request.getParameter("image");
 
+        // Giữ lại dữ liệu khi xảy ra lỗi
+        request.setAttribute("username", username);
+        request.setAttribute("email", email);
+        request.setAttribute("fullname", fullname);
+        request.setAttribute("phone", phone);
+        request.setAttribute("address", address);
+        request.setAttribute("image", image);
+
+        // Khởi tạo DAO
         AccountDAO accountDao = new AccountDAO();
+        UserDAO userDao = new UserDAO();
 
-        try {
-            //Kiểm tra tài khoản đã tồn tại chưa bằng Username
-            if (accountDao.isAccountExists(username)) {
-                 request.setAttribute("error", "exists.");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-                //response.sendRedirect("Login.jsp?error=exists"); // Kiểm tra file có tên login.jsp hay Login.jsp
-                return;
-            }
-
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-            request.setAttribute("error", "❌ Lỗi hệ thống! Vui lòng thử lại.");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
+        // Kiểm tra tài khoản đã tồn tại
+        if (accountDao.isAccountExists(username)) {
+            request.setAttribute("error", "❌ Tài khoản đã tồn tại. Vui lòng chọn tên khác!");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        //Tạo đối tượng Account mới
-        Account newAccount = new Account(username, password, email);
-
-        //Gọi addAccount() để thêm vào database
-        boolean isAdded = accountDao.addAccount(newAccount);
-
-        //Kiểm tra kết quả
-        if (isAdded) {
-            request.setAttribute("error", "Register is successfully!.");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "❌ Đăng ký thất bại! Vui lòng thử lại.");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
+        // Kiểm tra email đã tồn tại
+        if (accountDao.isEmailExists(email)) {
+            request.setAttribute("error", "❌ Email đã tồn tại. Vui lòng dùng email khác!");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
         }
 
-        //Chuyển hướng về trang login.jsp
-        response.sendRedirect("Login.jsp");
+        // Kiểm tra mật khẩu mạnh
+        if (!isValidPassword(password)) {
+            request.setAttribute("error", "❌ Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        // Tạo user mới
+        User newUser = new User(0, username, password, email, false, fullname, phone, address, image);
+
+        try {
+            // Thêm tài khoản vào bảng Account và lấy accountId
+            int accountId = userDao.insertAccount(newUser);
+            if (accountId > 0) {
+                newUser.setAccountId(accountId);
+
+                // Thêm vào bảng UserProfile
+                boolean profileInserted = userDao.insertUserProfile(newUser);
+
+                if (profileInserted) {
+                    // Đăng ký thành công
+                    request.setAttribute("successMsg", "✅ Đăng ký thành công! Vui lòng đăng nhập.");
+                    request.getRequestDispatcher("Login.jsp").forward(request, response);
+                } else {
+                    // Lỗi khi thêm profile
+                    request.setAttribute("error", "❌ Đăng ký thất bại (Lỗi khi tạo hồ sơ người dùng)!");
+                    request.getRequestDispatcher("register.jsp").forward(request, response);
+                }
+            } else {
+                // Lỗi khi thêm tài khoản
+                request.setAttribute("error", "❌ Đăng ký thất bại (Lỗi khi tạo tài khoản)!");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace(); // In log để debug
+            request.setAttribute("error", "❌ Lỗi hệ thống: " + e.getMessage());
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+        }
+    }
+
+    // Hàm kiểm tra độ mạnh của mật khẩu
+    private boolean isValidPassword(String password) {
+        // Ít nhất 8 ký tự, có chữ hoa, chữ thường, số, ký tự đặc biệt
+        return password != null && password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
     }
 
     /**
