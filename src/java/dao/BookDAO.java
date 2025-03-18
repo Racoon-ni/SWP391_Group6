@@ -460,4 +460,32 @@ public class BookDAO {
             e.printStackTrace();
         }
     }
+    public double getBookPrice(int bookId) throws ClassNotFoundException {
+    String sql = "SELECT price FROM Books WHERE book_id = ?";
+    try (Connection conn = DBConnect.connect();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, bookId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getDouble("price");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0.0;
+}
+
+    public boolean updateStockQuantity(int bookId, int newQuantity) throws ClassNotFoundException {
+    String sql = "UPDATE Books SET stock_quantity = ? WHERE book_id = ?";
+    try (Connection conn = DBConnect.connect();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, newQuantity);
+        ps.setInt(2, bookId);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
 }

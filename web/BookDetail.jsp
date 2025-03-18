@@ -90,10 +90,11 @@
                            class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
                             <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
                         </a>
-                        <a href="CheckoutServlet?book_id=<%= book.getBook_id() %>" 
-                           class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
-                            <i class="fas fa-credit-card me-2"></i> Mua ngay
-                        </a>
+                        <form action="BuyBookServlet" method="POST">
+                            <input type="hidden" name="book_id" value="<%= request.getParameter("book_id") %>">
+                            <input type="hidden" name="book_format" value="Physical"> <!-- Hoặc Ebook -->
+                            <button type="submit">Buy Book</button>
+                        </form>
                     </div>
                 </div>
 
