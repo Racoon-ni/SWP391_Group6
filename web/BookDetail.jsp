@@ -3,7 +3,6 @@
     Created on : Mar 4, 2025, 10:01:39 AM
     Author     : SE18-CE180628-Nguyen Pham Doan Trang
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="entity.Book, dao.BookDAO, java.util.List, entity.Account, entity.Interaction, dao.InteractionDAO, java.text.SimpleDateFormat" %>
 
@@ -88,7 +87,10 @@
                     <div class="mt-2 d-flex gap-3">
                         <a href="CartServlet?book_id=<%= book.getBook_id() %>&action=add" 
                            class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
-                            <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
+                            <i class="fas fa-shopping-cart me-2"></i>  
+                            <form action="AddToCartServlet" method="POST">
+                                <button type="submit" class="add-to-cart">Add to Cart</button>
+                            </form>
                         </a>
                         <form action="BuyBookServlet" method="POST">
                             <input type="hidden" name="book_id" value="<%= request.getParameter("book_id") %>">

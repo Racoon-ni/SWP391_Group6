@@ -5,6 +5,7 @@
 <%@ page import="dao.BookDAO" %>
 <%@ page import="entity.Category, dao.CategoryDAO" %> 
 <%@ page import="java.util.List, java.util.Map" %>
+
 <jsp:useBean id="bookDAO" class="dao.BookDAO" scope="request"/>
 
 <% List<Category> categories = (List<Category>) request.getAttribute("topCategories"); 
@@ -104,7 +105,9 @@
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="<%= book.getCoverImage() %>" alt="<%= book.getTitle() %>" class="product-item">
-                                            <button type="button" class="add-to-cart">Add to Cart</button>
+                                           <form action="AddToCartServlet" method="POST">
+                                            <button type="submit" class="add-to-cart">Add to Cart</button>
+                                           </form>
                                         </figure>
                                         <figcaption>
                                             <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>
@@ -176,7 +179,9 @@
                                         <div class="product-item">
                                             <figure class="product-style">
                                                 <img src="<%= book.getCoverImage() %>" alt="Book Cover" class="product-item">
-                                                <button type="button" class="add-to-cart">Add to Cart</button>
+                                               <form action="AddToCartServlet" method="POST">
+                                            <button type="submit" class="add-to-cart">Add to Cart</button>
+                                           </form>
                                             </figure>
                                             <figcaption>
                                                 <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>
@@ -211,7 +216,9 @@
                                         <div class="product-item">
                                             <figure class="product-style">
                                                 <img src="<%= book.getCoverImage() %>" alt="Book Cover" class="product-item">
-                                                <button type="button" class="add-to-cart">Add to Cart</button>
+                                               <form action="AddToCartServlet" method="POST">
+                                            <button type="submit" class="add-to-cart">Add to Cart</button>
+                                           </form>
                                             </figure>
                                             <figcaption>
                                                 <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>
