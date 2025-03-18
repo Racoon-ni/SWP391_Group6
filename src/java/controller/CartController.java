@@ -12,14 +12,14 @@ import java.io.IOException;
 @WebServlet("/cart")
 public class CartController extends HttpServlet {
     private final CartItemDAO cartDAO = new CartItemDAO();
- @Override
+@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Integer accountId = (Integer) session.getAttribute("accountId");
 
         if (accountId == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("Login.jsp");
             return;
         }
 
@@ -33,7 +33,7 @@ public class CartController extends HttpServlet {
         Integer accountId = (Integer) session.getAttribute("accountId");
 
         if (accountId == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("Login.jsp");
             return;
         }
 

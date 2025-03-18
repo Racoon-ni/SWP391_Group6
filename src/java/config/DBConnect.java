@@ -9,7 +9,7 @@ public class DBConnect {
 
     private static final String URL = "jdbc:sqlserver://127.0.0.1:1500;databaseName=BookWed2;encrypt=false;";
     private static final String USER = "sa";
-    private static final String PASSWORD = "1";
+    private static final String PASSWORD = "123";
 
     // Kết nối đến database
     public static Connection connect() throws ClassNotFoundException, SQLException {
@@ -18,6 +18,7 @@ public class DBConnect {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+   
     public static PreparedStatement prepareStatement(String query) throws SQLException, ClassNotFoundException {
         Connection conn = connect();  // Lấy kết nối từ phương thức connect()
         return conn.prepareStatement(query); // Trả về một PreparedStatement thực tế

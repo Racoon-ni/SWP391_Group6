@@ -2,7 +2,7 @@
 <%
     Integer accountId = (Integer) session.getAttribute("accountId");
     if (accountId == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("Login.jsp");
         return;
     }
 
