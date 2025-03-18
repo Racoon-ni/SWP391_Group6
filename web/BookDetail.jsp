@@ -85,16 +85,34 @@
                 <div class="col-md-4 text-center">
                     <img src="<%= book.getCoverImage() %>" alt="<%= book.getTitle() %>" class="img-fluid rounded shadow-lg">
 
-                    <div class="mt-2 d-flex gap-3">
-                        <a href="CartServlet?book_id=<%= book.getBook_id() %>&action=add" 
-                           class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
+                    <!-- Thêm vào giỏ hàng -->
+                    <form action="add-to-cart" method="post" class="mt-2 d-flex gap-3">
+                        <input type="hidden" name="bookId" value="<%= book.getBook_id() %>">
+
+                        <label>Số lượng:</label>
+                        <input type="number" name="quantity" value="1" min="1" required>
+
+                        <label>Chọn định dạng:</label>
+                        <select name="bookFormat">
+                            <option value="Physical">Sách giấy</option>
+                            <option value="Ebook">Ebook</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
                             <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
-                        </a>
-                        <a href="CheckoutServlet?book_id=<%= book.getBook_id() %>" 
-                           class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
+                        </button>
+                    </form>
+
+                    <!-- Mua ngay -->
+                    <form action="buy-now" method="post" class="mt-2">
+                        <input type="hidden" name="bookId" value="<%= book.getBook_id() %>">
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="bookFormat" value="Physical">
+
+                        <button type="submit" class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
                             <i class="fas fa-credit-card me-2"></i> Mua ngay
-                        </a>
-                    </div>
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Cột bên phải: Chứa tất cả thông tin còn lại -->

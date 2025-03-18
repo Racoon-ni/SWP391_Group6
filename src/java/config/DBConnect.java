@@ -9,7 +9,7 @@ public class DBConnect {
 
     private static final String URL = "jdbc:sqlserver://127.0.0.1:1500;databaseName=BookWed2;encrypt=false;";
     private static final String USER = "sa";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "1";
 
     // Kết nối đến database
     public static Connection connect() throws ClassNotFoundException, SQLException {
