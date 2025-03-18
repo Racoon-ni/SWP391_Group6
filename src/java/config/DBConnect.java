@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class DBConnect {
 
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=BookWed;encrypt=false;trustServerCertificate=true;";
+    private static final String URL = "jdbc:sqlserver://127.0.0.1:1500;databaseName=BookWed2;encrypt=false;";
     private static final String USER = "sa";
     private static final String PASSWORD = "1";
 

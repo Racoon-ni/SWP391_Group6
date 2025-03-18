@@ -12,7 +12,20 @@ import java.io.IOException;
 @WebServlet("/cart")
 public class CartController extends HttpServlet {
     private final CartItemDAO cartDAO = new CartItemDAO();
+ @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Integer accountId = (Integer) session.getAttribute("accountId");
 
+        if (accountId == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        request.setAttribute("cartItems", cartDAO.getCartByUser(accountId));
+        request.getRequestDispatcher("cart.jsp").forward(request, response);
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
