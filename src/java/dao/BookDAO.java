@@ -100,7 +100,10 @@ public class BookDAO {
                 book.setAuthorName(rs.getString("authorName"));
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
+                System.out.println("✅ Đã tìm thấy sách: " + book.getTitle());
                 return book;
+            } else {
+                System.out.println("❌ Không tìm thấy sách với ID: " + bookId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -460,32 +463,31 @@ public class BookDAO {
             e.printStackTrace();
         }
     }
+
     public double getBookPrice(int bookId) throws ClassNotFoundException {
-    String sql = "SELECT price FROM Books WHERE book_id = ?";
-    try (Connection conn = DBConnect.connect();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, bookId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getDouble("price");
+        String sql = "SELECT price FROM Books WHERE book_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return 0.0;
     }
-    return 0.0;
-}
 
     public boolean updateStockQuantity(int bookId, int newQuantity) throws ClassNotFoundException {
-    String sql = "UPDATE Books SET stock_quantity = ? WHERE book_id = ?";
-    try (Connection conn = DBConnect.connect();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, newQuantity);
-        ps.setInt(2, bookId);
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
+        String sql = "UPDATE Books SET stock_quantity = ? WHERE book_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, bookId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return false;
-}
 
 }
