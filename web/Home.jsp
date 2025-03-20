@@ -35,6 +35,7 @@
         <link rel="stylesheet" type="text/css" href="css/vendor.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link rel="stylesheet" type="text/css" href="css/home.css">
+        <link rel="stylesheet" type="text/css" href="css/button.css">
 
     </head>
 
@@ -105,10 +106,14 @@
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="<%= book.getCoverImage() %>" alt="<%= book.getTitle() %>" class="product-item">
-                                            <form action="AddToCartServlet" method="POST">
+                                            <form action="cart" method="post">
+                                                <input type="hidden" name="action" value="add">
                                                 <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
-                                                <button type="submit" class="add-to-cart">Add to Cart</button>
+                                                <input type="hidden" name="quantity" value="1">
+                                                <input type="hidden" name="book_format" value="Physical">
+                                                <button type="submit" class="btn-cart">Add To Cart</button>
                                             </form>
+
 
                                         </figure>
                                         <figcaption>
@@ -181,10 +186,15 @@
                                         <div class="product-item">
                                             <figure class="product-style">
                                                 <img src="<%= book.getCoverImage() %>" alt="Book Cover" class="product-item">
-                                                <form action="AddToCartServlet" method="POST">
+                                                <form action="cart" method="post">
+                                                    <input type="hidden" name="action" value="add">
                                                     <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
-                                                    <button type="submit" class="add-to-cart">Add to Cart</button>
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="book_format" value="Physical">
+                                                    <button type="submit" class="btn-cart">Add To Cart</button>
                                                 </form>
+
+
 
                                             </figure>
                                             <figcaption>
@@ -220,11 +230,14 @@
                                         <div class="product-item">
                                             <figure class="product-style">
                                                 <img src="<%= book.getCoverImage() %>" alt="Book Cover" class="product-item">
-                                                <form action="AddToCartServlet" method="POST">
+                                                <form action="cart" method="post">
+                                                    <input type="hidden" name="action" value="add">
                                                     <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
-                                                    <button type="submit" class="add-to-cart">Add to Cart</button>
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="book_format" value="Physical">
+                                                    <button type="submit" class="btn-cart">Add To Cart</button>
                                                 </form>
-                                                >
+
                                             </figure>
                                             <figcaption>
                                                 <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>

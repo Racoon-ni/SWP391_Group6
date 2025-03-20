@@ -47,6 +47,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/button.css">
+
     </head>
     <body>
         <jsp:include page="Menu.jsp"/>
@@ -86,11 +88,16 @@
 
                     <div class="mt-2 d-flex gap-3">
                         <a href="CartServlet?book_id=<%= book.getBook_id() %>&action=add" 
-                           class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
+                           class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center">
                             <i class="fas fa-shopping-cart me-2"></i>  
-                            <form action="AddToCartServlet" method="POST">
-                                <button type="submit" class="add-to-cart">Add to Cart</button>
+                            <form action="cart" method="post">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+                                <input type="hidden" name="quantity" value="1">
+                                <input type="hidden" name="book_format" value="Physical">
+                                <button type="submit" class="btn-cart">Add To Cart</button>
                             </form>
+
                         </a>
                         <form action="BuyBookServlet" method="POST">
                             <input type="hidden" name="book_id" value="<%= request.getParameter("book_id") %>">

@@ -1,0 +1,25 @@
+/* 
+    Created on : Mar 21, 2025, 5:47:36 AM
+    Author     : ThinhLVCE181726 <your.name at your.org>
+*/
+
+/* Định dạng chung cho nút Add to Cart */
+.btn-cart {
+    background-color: tan;
+    color: black;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng khi hover */
+.btn-cart:hover {
+    background-color: lightgray;
+    color: black;
+}
