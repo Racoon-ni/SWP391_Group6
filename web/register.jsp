@@ -9,8 +9,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Register</title>
-        <link rel="stylesheet" href="css/register.css"> <!-- CSS riêng -->
-        <!-- Thêm FontAwesome b?n m?i nh?t -->
+        <link rel="stylesheet" href="css/register.css"> <!-- CSS riï¿½ng -->
+        <!-- Thï¿½m FontAwesome b?n m?i nh?t -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
               integrity="sha512-1zcF+2uiG9q4CPGK/c/pX9nuSUXGKmzME2YkdE+5EYXPLkZXl2b7xvFeoJq6Digw1VE3D6Z0fjQRPtP2z5aXvg==" 
               crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -19,12 +19,12 @@
     <body>
         <div class="register-container">
             <h1>Register</h1>
-            <!-- Hi?n th? thông báo l?i -->
+            <!-- Hi?n th? thï¿½ng bï¿½o l?i -->
             <c:if test="${not empty error}">
                 <div class="error-message">${error}</div>
             </c:if>
 
-            <!-- Hi?n th? thông báo thành công -->
+            <!-- Hi?n th? thï¿½ng bï¿½o thï¿½nh cï¿½ng -->
             <c:if test="${not empty successMsg}">
                 <div class="success-message">${successMsg}</div>
             </c:if>
@@ -57,15 +57,15 @@
                 <label>Phone <span style="color: red;">*</span></label>
                 <input name="phone" type="text" placeholder="Phone number" value="${phone != null ? phone : ''}" required>
 
-                <!-- Full Name (Không b?t bu?c) -->
+                <!-- Full Name (Khï¿½ng b?t bu?c) -->
                 <label>Full Name</label>
                 <input name="fullname" type="text" placeholder="Full name" value="${fullname != null ? fullname : ''}">
 
-                <!-- Address (Không b?t bu?c) -->
+                <!-- Address (Khï¿½ng b?t bu?c) -->
                 <label>Address</label>
                 <input name="address" type="text" placeholder="Address" value="${address != null ? address : ''}">
 
-                <!-- Image (Không b?t bu?c) -->
+                <!-- Image (Khï¿½ng b?t bu?c) -->
                 <label>Image URL</label>
                 <input name="image" type="text" placeholder="Image URL" value="${image != null ? image : ''}">
 
@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <!-- Script x? lý toggle m?t và ki?m tra password -->
+        <!-- Script x? lï¿½ toggle m?t vï¿½ ki?m tra password -->
         <script>
             // Toggle password visibility
             function togglePasswordVisibility(toggleId, inputId) {
@@ -111,9 +111,9 @@
             //Check validate Phone number
             function validatePhoneNumber() {
                 let phone = document.getElementById("phone").value;
-                let phoneRegex = /^0\d{9}$/; // Ch? ch?p nh?n 10 s? và b?t ??u b?ng s? 0
+                let phoneRegex = /^0\d{9}$/; // Ch? ch?p nh?n 10 s? vï¿½ b?t ??u b?ng s? 0
                 if (!phoneRegex.test(phone)) {
-                    document.getElementById("error-message").textContent = "S? ?i?n tho?i không h?p l?! Ph?i có 10 s?, b?t ??u b?ng 0.";
+                    document.getElementById("error-message").textContent = "S? ?i?n tho?i khï¿½ng h?p l?! Ph?i cï¿½ 10 s?, b?t ??u b?ng 0.";
                     return false;
                 }
                 return true;
