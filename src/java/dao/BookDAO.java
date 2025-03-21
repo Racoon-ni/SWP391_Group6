@@ -29,6 +29,76 @@ public class BookDAO {
     ResultSet rs = null;
     private Connection conn;
 
+    public List<Book> getAllBooksByAdmin() throws ClassNotFoundException {
+        List<Book> list = new ArrayList<>();
+        String query = "SELECT * FROM Books"; // 🔴 Lấy tất cả sách, kể cả sách ẩn
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query);  ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Book book = new Book(
+                        rs.getInt("book_id"),
+                        rs.getString("title"),
+                        rs.getInt("author_id"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getString("cover_image"),
+                        rs.getString("file_path"),
+                        rs.getString("publisher"),
+                        rs.getInt("publication_year"),
+                        rs.getInt("stock_quantity"),
+                        rs.getString("language"),
+                        rs.getInt("series_id"),
+                        rs.getInt("volume_number"),
+                        rs.getString("book_type"),
+                        rs.getInt("created_by"),
+                        rs.getBoolean("isDelete") // 🔴 Lấy trạng thái isDelete
+                );
+                list.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Book> searchBook(String searchString) throws ClassNotFoundException {
+        List<Book> list = new ArrayList<>();
+        String query = "SELECT * FROM Books WHERE title LIKE ? AND isDelete = 0";
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, "%" + searchString + "%"); // Tìm kiếm tiêu đề chứa searchString
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Book book = new Book(
+                        rs.getInt("book_id"),
+                        rs.getString("title"),
+                        rs.getInt("author_id"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getString("cover_image"),
+                        rs.getString("file_path"),
+                        rs.getString("publisher"),
+                        rs.getInt("publication_year"),
+                        rs.getInt("stock_quantity"),
+                        rs.getString("language"),
+                        rs.getInt("series_id"),
+                        rs.getInt("volume_number"),
+                        rs.getString("book_type"),
+                        rs.getInt("created_by"),
+                        rs.getBoolean("isDelete")
+                );
+                System.out.println("Tìm thấy sách: " + book.getTitle() + " | isDelete: " + book.getIsDelete());
+                list.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public BookDAO() throws ClassNotFoundException, SQLException {
         this.conn = new DBConnect().connect(); // Luôn khởi tạo kết nối khi tạo BookDAO
     }
@@ -66,6 +136,7 @@ public class BookDAO {
                 book.setAuthorName(rs.getString("authorName"));
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
+                book.setIsDelete(rs.getBoolean("isDelete"));
                 books.add(book);
             }
         } catch (SQLException e) {
@@ -84,7 +155,7 @@ public class BookDAO {
                 + "FROM Books b "
                 + "JOIN Author a ON b.author_id = a.author_id "
                 + "LEFT JOIN BookSeries s ON b.series_id = s.series_id "
-                + "WHERE b.book_id = ?";
+                + "WHERE b.book_id = ?"; //AND b.isDelete = 0";
         try {
             conn = new DBConnect().connect();
             ps = conn.prepareStatement(sql);
@@ -100,6 +171,7 @@ public class BookDAO {
                 book.setAuthorName(rs.getString("authorName"));
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
+                book.setIsDelete(rs.getBoolean("isDelete"));
                 return book;
             }
         } catch (SQLException e) {
@@ -459,4 +531,59 @@ public class BookDAO {
             e.printStackTrace();
         }
     }
+
+    public boolean isBookExists(String title) throws ClassNotFoundException {
+        String query = "SELECT COUNT(*) FROM Books WHERE title = ? AND isDelete = 0";
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, title);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0 thì sách đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteBook(int bookID) throws ClassNotFoundException {
+        String query = "UPDATE Books SET isDelete = 1 WHERE book_id = ?";
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, bookID);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean addBook(Book book) throws ClassNotFoundException {
+        String query = "INSERT INTO Books (title, author, description, price, cover_image, file_path) "
+                + "VALUES (?, ?, ?, ?, ?, ?,0)";
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+            if (conn != null) {
+                System.out.println("Connected to the database!");
+            } else {
+                System.out.println("Failed to connect to the database.");
+            }
+            pstmt.setString(1, book.getTitle());
+            pstmt.setString(2, book.getAuthorName());
+            pstmt.setString(3, book.getDescription());
+            pstmt.setDouble(4, book.getPrice());
+            pstmt.setString(5, book.getCoverImage());
+            pstmt.setString(6, book.getFilePath());
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
