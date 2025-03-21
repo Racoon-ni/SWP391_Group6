@@ -7,7 +7,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Giỏ hàng - Book Store</title>
-        
+
         <!-- Link CSS -->
         <link rel="stylesheet" href="styles.css">
         <style>
@@ -81,7 +81,7 @@
 
         <div class="container">
             <h2>🛒 Giỏ hàng của bạn</h2>
-            
+
             <table>
                 <tr>
                     <th></th>
@@ -143,10 +143,17 @@
                 <input type="hidden" name="action" value="clear">
                 <input type="submit" class="btn btn-clear" value="🗑 Xóa toàn bộ giỏ hàng">
             </form>
-            
+
             <br>
             <a href="home" class="btn btn-update">🏠 Tiếp tục mua sắm</a>
-            <a href="checkout.jsp" class="btn btn-update">💳 Thanh toán</a>
+            <form action="cart" method="POST">
+                <input type="hidden" name="action" value="checkout">
+                <button type="submit" class="btn btn-update" style="margin-top: 10px; margin-bottom: 10px">💳 Thanh toán</button>
+            </form>
+
+
+
+
         </div>
 
     </body>

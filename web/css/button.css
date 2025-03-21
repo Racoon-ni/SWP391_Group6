@@ -1,25 +1,225 @@
-/* 
-    Created on : Mar 21, 2025, 5:47:36 AM
-    Author     : ThinhLVCE181726 <your.name at your.org>
-*/
-
-/* Định dạng chung cho nút Add to Cart */
-.btn-cart {
-    background-color: tan;
-    color: black;
+/* ==========================================================
+   ✅ Giao diện Nút (Buttons)
+========================================================== */
+.btn-cart, .btn-buy {
+    background-color: #c5a992;  /* Màu be dịu nhẹ */
+    color: white;
     font-weight: bold;
-    border: 2px solid black;
-    border-radius: 12px;
+    border: 2px solid #8c7a63;
+    border-radius: 8px; /* Bo tròn nhẹ */
     padding: 10px 20px;
     font-size: 16px;
     text-align: center;
+    display: inline-block;
     width: 100%;
-    cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
 
-/* Hiệu ứng khi hover */
-.btn-cart:hover {
-    background-color: lightgray;
+.btn-cart:hover, .btn-buy:hover {
+    background-color: #b09176;  /* Màu tối hơn khi hover */
+    border-color: #6e5947;
+    color: white;
+}
+
+/* Button đặc biệt cho "Mua Ngay" */
+.btn-buy {
+    background-color: #4CAF50;
+    border: 2px solid #3e8e41;
+}
+
+.btn-buy:hover {
+    background-color: #45a049;
+}
+
+/* ==========================================================
+   ✅ Hiệu ứng đánh giá sao (Ratings)
+========================================================== */
+.star-rating {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.star-icon {
+    color: #ddd;  /* Màu mặc định */
+    transition: color 0.3s ease;
+}
+
+.star-icon:hover,
+.star-icon.active {
+    color: #ffc107; /* Màu vàng khi hover hoặc được chọn */
+}
+
+/* ==========================================================
+   ✅ Bố cục trang chi tiết sách (Book Detail Layout)
+========================================================== */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Card chứa thông tin sách */
+.book-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hình ảnh sách */
+.book-cover {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* Phần đánh giá */
+.review-container {
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* ==========================================================
+   ✅ Hiệu ứng ảnh (Hover Image Effect)
+========================================================== */
+.book-cover:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* ==========================================================
+   ✅ Breadcrumb (Thanh Điều Hướng)
+========================================================== */
+.breadcrumb {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #8c7a63;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+    color: #6e5947;
+}
+
+/* ==========================================================
+   ✅ Bố cục danh sách sản phẩm tương tự (Similar Books)
+========================================================== */
+.similar-books-container {
+    margin-top: 30px;
+}
+
+.similar-book-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.similar-book-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.similar-book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================
+   ✅ Bố cục đánh giá của khách hàng (Customer Reviews)
+========================================================== */
+.comment-card {
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.comment-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Nút báo cáo bình luận */
+.report-comment-btn {
+    color: #d9534f;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.report-comment-btn:hover {
+    color: #c9302c;
+}
+/* Định dạng chung cho vùng chứa hai nút */
+.button-container {
+    display: flex;  /* Căn chỉnh theo hàng ngang */
+    gap: 10px; /* Khoảng cách giữa hai nút */
+    justify-content: center; /* Căn giữa */
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Định dạng cho nút Add to Cart */
+.btn-cart {
+    background-color: #c5a992;  /* Màu be dịu nhẹ */
     color: black;
+    font-weight: bold;
+    border: 2px solid #8c7a63;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    width: auto; /* Chỉnh lại kích thước vừa với nội dung */
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-cart i {
+    margin-right: 5px; /* Khoảng cách giữa icon và chữ */
+}
+
+.btn-cart:hover {
+    background-color: #b09176;
+    border-color: #6e5947;
+}
+
+/* Định dạng cho nút Buy Book */
+.btn-buy {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border: 2px solid #3e8e41;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-buy i {
+    margin-right: 5px;
+}
+
+.btn-buy:hover {
+    background-color: #45a049;
 }

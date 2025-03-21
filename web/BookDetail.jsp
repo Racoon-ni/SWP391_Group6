@@ -46,7 +46,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <!--        <link rel="stylesheet" type="text/css" href="css/style.css">-->
         <link rel="stylesheet" type="text/css" href="css/button.css">
 
     </head>
@@ -86,25 +86,27 @@
                 <div class="col-md-4 text-center">
                     <img src="<%= book.getCoverImage() %>" alt="<%= book.getTitle() %>" class="img-fluid rounded shadow-lg">
 
-                    <div class="mt-2 d-flex gap-3">
-                        <a href="CartServlet?book_id=<%= book.getBook_id() %>&action=add" 
-                           class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-shopping-cart me-2"></i>  
-                            <form action="cart" method="post">
-                                <input type="hidden" name="action" value="add">
-                                <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
-                                <input type="hidden" name="quantity" value="1">
-                                <input type="hidden" name="book_format" value="Physical">
-                                <button type="submit" class="btn-cart">Add To Cart</button>
-                            </form>
+                    <div class="button-container">
+    <form action="cart" method="post">
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+        <input type="hidden" name="quantity" value="1">
+        <input type="hidden" name="book_format" value="Physical">
+        <button type="submit" class="btn-cart">
+            <i class="fas fa-shopping-cart"></i> Add To Cart
+        </button>
+    </form>
 
-                        </a>
-                        <form action="BuyBookServlet" method="POST">
-                            <input type="hidden" name="book_id" value="<%= request.getParameter("book_id") %>">
-                            <input type="hidden" name="book_format" value="Physical"> <!-- Hoặc Ebook -->
-                            <button type="submit">Buy Book</button>
-                        </form>
-                    </div>
+    <form action="BuyBookServlet" method="POST">
+        <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+        <input type="hidden" name="book_format" value="Physical">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="btn-buy">
+            <i class="fas fa-credit-card"></i> Buy Book
+        </button>
+    </form>
+</div>
+
                 </div>
 
                 <!-- Cột bên phải: Chứa tất cả thông tin còn lại -->
