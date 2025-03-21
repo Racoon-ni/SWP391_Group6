@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Search Form -->
-                <form action="search" method="post" class="my-3 d-flex">
+                <form action="SearchBookController" method="post" class="my-3 d-flex">
                     <input type="text" name="search" class="form-control me-2" placeholder="Search by title...">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
@@ -90,10 +90,10 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${list}" var="p">
-                            <c:if test="${p.isDelete == 0}">
+                            <c:if test="${p.isDelete == false}">
                                 <tr>
                                     <td>${p.title}</td>
-                                    <td>${p.author}</td>
+                                    <td>${p.authorId}</td>
                                     <td>${p.price}$</td>
                                     <td>
                                         <a href="editBook.jsp?id=${p.book_id}" class="btn btn-success btn-sm">Edit</a>
