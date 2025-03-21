@@ -162,8 +162,9 @@ public class AccountDAO {
         }
         return false;
     }
-     // Kiểm tra xem username có tồn tại chưa
-    public boolean isAccountExists(String username) throws SQLException, ClassNotFoundException {
+    // Kiểm tra xem username có tồn tại chưa
+
+    public boolean isAccountExists(String username) {
         String query = "SELECT COUNT(*) FROM Account WHERE username = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
 
@@ -171,66 +172,14 @@ public class AccountDAO {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                int count = rs.getInt(1); // lấy giá trị COUNT(*)
+                return count > 0; // nếu > 0 là đã tồn tại
             }
-        }
-        // Nếu có kết quả và COUNT(*) > 0 thì tài khoản đã tồn tại
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-        return false;// Mặc định trả về false nếu có lỗi xảy ra
-    }
 
-    // Thêm tài khoản vào database
-//    public boolean addAccount(Account account) {
-//        String query = "INSERT INTO Users (username, password, email) VALUES (?, ?, ?)";
-//        try (Connection conn = DBConnect.connect();
-//             PreparedStatement pstmt = conn.prepareStatement(query)) {
-//            pstmt.setString(1, account.getUsername());
-//            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
-//            pstmt.setString(3, account.getEmail());
-//            return pstmt.executeUpdate() > 0;
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//    public boolean addAccount(Account account) {
-//        String query = "INSERT INTO [dbo].Account ([username], [password], [email]) VALUES (?, ?, ?)";
-//        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-//            pstmt.setString(1, account.getUsername());
-//            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
-//            pstmt.setString(3, account.getEmail());
-//
-//            System.out.println("⚡ Thực thi SQL: " + pstmt.toString()); // Debug SQL
-//            int rowsAffected = pstmt.executeUpdate();
-//
-//            if (rowsAffected > 0) {
-//                System.out.println("✅ Tài khoản đã được thêm vào database!");
-//            } else {
-//                System.out.println("❌ Không thể thêm tài khoản!");
-//            }
-//
-//            return rowsAffected > 0;
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace(); // Hiển thị lỗi SQL chi tiết
-//        }
-//        return false;
-//    }
-    //Thêm tài khoản mới vảo database
-    public boolean addAccount(Account account) {
-        String query = "INSERT INTO Account (username, password, email) VALUES (?, ?, ?)";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, account.getUsername());
-            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
-            pstmt.setString(3, account.getEmail());
-
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // log lỗi
         }
-        return false;
+        return false; // lỗi hoặc không tìm thấy username
     }
 
     //Lấy tất cả các account có trong dữ liệu
@@ -292,5 +241,40 @@ public class AccountDAO {
         return accountList;
     }
 
+    // Kiểm tra email đã tồn tại chưa trong bảng Account
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT account_id FROM Account WHERE email = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email); // Gán giá trị email vào câu lệnh SQL
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                // Nếu có dữ liệu trả về, nghĩa là email đã tồn tại
+                return rs.next();
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace(); // In lỗi để debug nếu có
+        }
+        // Nếu không có kết quả hoặc xảy ra lỗi thì coi như email chưa tồn tại
+        return false;
+    }
+
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE Account SET password = ? WHERE email = ?";
+        try {
+            Connection conn = DBConnect.connect(); // Có thể ném ClassNotFoundException
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, newPassword); // Có thể hash password trước khi lưu (bảo mật)
+            ps.setString(2, email);
+            int rows = ps.executeUpdate();
+
+            return rows > 0; // Nếu có dòng bị ảnh hưởng thì trả về true
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
