@@ -65,14 +65,14 @@ public class BookDetailController extends HttpServlet {
         BookDAO bookDao = new BookDAO();
         Book book = bookDao.getBookById(book_id);
         if (book == null) {
-            response.sendRedirect("error.jsp");
+            request.setAttribute("errorMessage", "Không tìm thấy sách!");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
             return;
         }
 
         List<Book> topBooks = bookDao.getTop4();
         List<Category> listC = bookDao.getAllCategory();
 
-        
         request.setAttribute("detail", book);
         request.setAttribute("book", book);
         request.setAttribute("topBooks", topBooks);
