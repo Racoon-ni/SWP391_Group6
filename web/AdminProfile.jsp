@@ -9,6 +9,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <style>
             .sidebar {
                 width: 250px;
@@ -86,7 +88,10 @@
                         </tr>
                         <tr>
                             <th>Password:</th>
-                            <td>******** <button class="btn btn-primary btn-sm" id="changePasswordBtn">Thay đổi</button></td>
+                            <td>
+                                ********
+                                <button class="btn btn-primary btn-sm" id="changePasswordBtn" style="float: right;">Thay đổi</button>
+                            </td>
                         </tr>
                         <tr>
                             <th>Email:</th>
@@ -112,19 +117,31 @@
                     <div class="modal-body">
                         <form id="changePasswordForm">
                             <div class="mb-3">
-                                <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
-                                <input type="password" class="form-control" id="currentPassword" required>
-                                <span class="error-message" id="errorCurrentPassword"></span>
+                                <label class="form-label fw-bold">Mật khẩu hiện tại:</label>
+                                <div class="input-group">
+                                    <input type="password" name="currentPassword" class="form-control border-primary" required id="currentPassword">
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label for="newPassword" class="form-label">Mật khẩu mới</label>
-                                <input type="password" class="form-control" id="newPassword" required>
-                                <span class="error-message" id="errorNewPassword"></span>
+                                <label class="form-label fw-bold">Mật khẩu mới:</label>
+                                <div class="input-group">
+                                    <input type="password" name="newPassword" class="form-control border-primary" required id="newPassword">
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">Nhập lại mật khẩu mới</label>
-                                <input type="password" class="form-control" id="confirmPassword" required>
-                                <span class="error-message" id="errorConfirmPassword"></span>
+                                <label class="form-label fw-bold">Xác nhận mật khẩu mới:</label>
+                                <div class="input-group">
+                                    <input type="password" name="confirmPassword" class="form-control border-primary" required id="confirmPassword">
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -181,7 +198,35 @@
                     });
                 });
             });
+
+            document.getElementById('toggleCurrentPassword').addEventListener('click', function (e) {
+                togglePassword('currentPassword', this);
+            });
+
+            document.getElementById('toggleNewPassword').addEventListener('click', function (e) {
+                togglePassword('newPassword', this);
+            });
+
+            document.getElementById('toggleConfirmPassword').addEventListener('click', function (e) {
+                togglePassword('confirmPassword', this);
+            });
+
+            function togglePassword(inputId, button) {
+                var input = document.getElementById(inputId);
+                var icon = button.querySelector('i');
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
         </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     </body>
 </html>

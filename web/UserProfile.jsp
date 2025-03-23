@@ -45,7 +45,9 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/userProfile.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
-       
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     </head>
 
     <body>
@@ -118,11 +120,9 @@
                             <h4 class="text-warning">Cài đặt tài khoản</h4>
                             <a id="sidebar-account" class="<%= activeTab.equals("personalInfo") ? "active" : "" %>" onclick="changeTab('personalInfo')">Tài khoản của tôi</a>
                             <a id="sidebar-profile" class="<%= activeTab.equals("profile") ? "active" : "" %>" onclick="changeTab('profile')">Hồ sơ</a>
-                            <a id="sidebar-status" class="<%= activeTab.equals("userStatus") ? "active" : "" %>" onclick="changeTab('userStatus')">Trạng thái tài khoản</a>
                             <h4 class="text-warning mt-4">Thanh toán</h4>
                             <a id="sidebar-history" class="<%= activeTab.equals("paymentHistory") ? "active" : "" %>" onclick="changeTab('paymentHistory')">Lịch sử thanh toán</a>
                             <h4 class="text-warning">Cài đặt bảo mật</h4>
-                            <a id="sidebar-security" class="<%= activeTab.equals("securitySettings") ? "active" : "" %>" onclick="changeTab('securitySettings')">Thông tin bảo mật</a>
                             <a id="sidebar-password" class="<%= activeTab.equals("changePassword") ? "active" : "" %>" onclick="changeTab('changePassword')">Đổi mật khẩu</a>
                             <a ></a>
                         </div>
@@ -151,6 +151,17 @@
                                             <p class="mb-1"><strong class="fw-bold">Địa chỉ:</strong></p>
                                             <p class="text-dark"><%= user.getAddress() %></p>
                                         </div>
+
+                                        <div class="mb-3">
+                                            <p class="mb-1"><strong class="fw-bold">Tên đăng nhập:</strong></p>
+                                            <p class="text-dark"><%= user.getUsername() %></p>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <p class="mb-1"><strong class="fw-bold">Email:</strong></p>
+                                            <p class="text-dark"><%= user.getEmail() %></p>
+                                        </div>
+
                                         <button class="btn btn-primary mt-3 px-4 py-2 fw-bold" onclick="changeTab('profile')">Thay đổi thông tin</button>
                                     </div>
                                 </div>
@@ -159,10 +170,16 @@
                                 <div class="tab-pane <%= activeTab.equals("profile") ? "show active" : "" %>" id="profile">
                                     <div class="p-4 bg-light text-dark rounded shadow-lg">
                                         <h4 class="fw-bold text-primary mb-3">Cập nhật thông tin cá nhân</h4>
-                                        <form method="POST" class="mt-3">
+                                        <form method="POST" action="accountProfile?action=updateProfile" class="mt-3" enctype="multipart/form-data">
+                                            <!-- Thêm input hidden để truyền accountId -->
+                                            <input type="hidden" name="accountId" value="<%= user.getAccountId() %>">
+
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">Ảnh đại diện (URL):</label>
-                                                <input type="text" name="image" class="form-control border-primary" value="<%= user.getImage() %>">
+                                                <label class="form-label fw-bold">Ảnh đại diện:</label>
+                                                <% if (user.getImage() != null && !user.getImage().isEmpty()) { %>
+                                                <img src="<%= user.getImage() %>" alt="Ảnh đại diện hiện tại" width="100">
+                                                <% } %>
+                                                <input type="file" name="image" class="form-control border-primary">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Tên hiển thị:</label>
@@ -181,17 +198,6 @@
                                                 <button type="button" class="btn btn-secondary fw-bold px-4 py-2" onclick="changeTab('personalInfo')">Hủy</button>
                                             </div>
                                         </form>
-                                    </div>
-                                </div>
-
-                                <!-- Tab 3: Trạng thái người dùng -->
-                                <div class="tab-pane <%= activeTab.equals("userStatus") ? "show active" : "" %>" id="userStatus">
-                                    <div class="p-4 bg-light text-dark rounded shadow-lg">
-                                        <h4 class="fw-bold text-primary mb-3">Trạng thái tài khoản</h4>
-                                        <p>Loại tài khoản: <strong>Thành viên VIP</strong></p>
-                                        <p>Ngày tham gia: <strong>01/01/2023</strong></p>
-                                        <p>Lần đăng nhập gần nhất: <strong>27/02/2025</strong></p>
-                                        <p>Trạng thái hoạt động: <span class="badge bg-success">Đang hoạt động</span></p>
                                     </div>
                                 </div>
 
@@ -227,26 +233,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tab 5: Cài đặt bảo mật -->
-                                <div class="tab-pane <%= activeTab.equals("securitySettings") ? "show active" : "" %>" id="securitySettings">
-                                    <div class="p-4 bg-light text-dark rounded shadow-lg">
-                                        <h4 class="fw-bold text-primary mb-3">Thông tin bảo mật</h4>
-                                        <div class="mb-3">
-                                            <p class="mb-1"><strong class="fw-bold">Username:</strong></p>
-
-                                        </div>
-                                        <div class="mb-3">
-                                            <p class="mb-1"><strong class="fw-bold">Email:</strong></p>
-
-                                        </div>
-                                        <div class="mb-3">
-                                            <p class="mb-1"><strong class="fw-bold">Password:</strong></p>
-                                            <p class="text-dark">********</p> <!-- Không hiển thị mật khẩu thực tế -->
-
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <!-- Tab 6: Đổi mật khẩu -->
                                 <div class="tab-pane <%= activeTab.equals("changePassword") ? "show active" : "" %>" id="changePassword">
                                     <div class="p-4 bg-light text-dark rounded shadow-lg">
@@ -254,15 +240,30 @@
                                         <form method="POST" action="ChangePasswordServlet" class="mt-3">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Mật khẩu hiện tại:</label>
-                                                <input type="password" name="currentPassword" class="form-control border-primary" required>
+                                                <div class="input-group">
+                                                    <input type="password" name="currentPassword" class="form-control border-primary" required id="currentPassword">
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Mật khẩu mới:</label>
-                                                <input type="password" name="newPassword" class="form-control border-primary" required>
+                                                <div class="input-group">
+                                                    <input type="password" name="newPassword" class="form-control border-primary" required id="newPassword">
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">Xác nhận mật khẩu mới:</label>
-                                                <input type="password" name="confirmPassword" class="form-control border-primary" required>
+                                                <div class="input-group">
+                                                    <input type="password" name="confirmPassword" class="form-control border-primary" required id="confirmPassword">
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <button type="submit" class="btn btn-success fw-bold px-4 py-2">Cập nhật</button>
@@ -280,9 +281,9 @@
         </div>
 
         <!-- Footer container with isolation -->
-       
-            <jsp:include page="Footer.jsp"></jsp:include>
-       
+
+        <jsp:include page="Footer.jsp"></jsp:include>
+
 
         <script>
             // Function to show popup notification
@@ -346,7 +347,35 @@
                     notification.style.display = 'none'; // Hide it after the animation
                 }, 3000); // 3 seconds
             }
+
+            document.getElementById('toggleCurrentPassword').addEventListener('click', function (e) {
+                togglePassword('currentPassword', this);
+            });
+
+            document.getElementById('toggleNewPassword').addEventListener('click', function (e) {
+                togglePassword('newPassword', this);
+            });
+
+            document.getElementById('toggleConfirmPassword').addEventListener('click', function (e) {
+                togglePassword('confirmPassword', this);
+            });
+
+            function togglePassword(inputId, button) {
+                var input = document.getElementById(inputId);
+                var icon = button.querySelector('i');
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
         </script>
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
     </body>
 </html>
