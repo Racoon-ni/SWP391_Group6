@@ -23,18 +23,20 @@ public class ReportCommentController extends HttpServlet {
         HttpSession session = request.getSession();
 
         // Check if user is logged in
-        if (session == null || session.getAttribute("account") == null) {
+        Account loginAccount = (Account) session.getAttribute("account");
+        if (loginAccount == null) {
             response.sendRedirect("Login.jsp");
             return;
         }
 
         try {
-
+            int accountIdReported = loginAccount.getAccountId(); // Người báo cáo
             int interactionId = Integer.parseInt(request.getParameter("interaction_id"));
             int bookId = Integer.parseInt(request.getParameter("book_id"));
+            String reason = request.getParameter("reason");
 
             InteractionDAO interactionDAO = new InteractionDAO();
-            boolean success = interactionDAO.reportComment(interactionId, 1);
+            boolean success = interactionDAO.reportComment(interactionId, accountIdReported, reason);
 
             // Mark the comment as reported in Interaction table
             if (success) {

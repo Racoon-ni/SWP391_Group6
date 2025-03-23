@@ -58,6 +58,8 @@
                 <a href="#"> <i class="fas fa-cog"></i> Cài đặt</a>
                 <a href="manageAccount"> <i class="fas fa-users"></i> Quản lí người dùng</a>
                 <a href="manageBook" class="active"> <i class="fas fa-book"></i> Quản lí sách</a>
+                <a href="manageComment"><i class="fas fa-book"></i> Quản lí bình luận</a>
+            <a href="warningUsers"><i class="fas fa-exclamation-triangle"></i> Người dùng bị cảnh báo</a>
             </div>
 
             <!-- Main Content -->

@@ -42,6 +42,18 @@
                             <a href="#">Forgot your password?</a>
                         </div>
                     </div>
+                    <%
+                    String error = request.getParameter("error");
+                    if ("invalid".equals(error)) {
+                    %>
+                    <script>alert('Wrong username or password!');</script>
+                    <%
+                        } else if ("locked".equals(error)) {
+                    %>
+                    <script>alert('Your account has been locked, please contact admin to unlock!');</script>
+                    <%
+                        }
+                    %>
                     <button type="submit">Login</button>
                     <span>or use your account</span>
                     <div class="social-contaniner">
@@ -76,35 +88,35 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script>
-                    function validateForm() {
-                        var username = document.getElementById("inputEmail").value;
-                        var password = document.getElementById("inputPassword").value;
+                        function validateForm() {
+                            var username = document.getElementById("inputEmail").value;
+                            var password = document.getElementById("inputPassword").value;
 
-                        if (username.trim() === "" || password.trim() === "") {
-                            alert("Please enter both username and password");
-                            return false;
+                            if (username.trim() === "" || password.trim() === "") {
+                                alert("Please enter both username and password");
+                                return false;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
 
-                    function toggleResetPswd(e) {
-                        e.preventDefault();
-                        $('#logreg-forms .form-signin').toggle();
-                        $('#logreg-forms .form-reset').toggle();
-                    }
+                        function toggleResetPswd(e) {
+                            e.preventDefault();
+                            $('#logreg-forms .form-signin').toggle();
+                            $('#logreg-forms .form-reset').toggle();
+                        }
 
-                    function toggleSignUp(e) {
-                        e.preventDefault();
-                        $('#logreg-forms .form-signin').toggle();
-                        $('#logreg-forms .form-signup').toggle();
-                    }
+                        function toggleSignUp(e) {
+                            e.preventDefault();
+                            $('#logreg-forms .form-signin').toggle();
+                            $('#logreg-forms .form-signup').toggle();
+                        }
 
-                    $(() => {
-                        $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
-                        $('#logreg-forms #cancel_reset').click(toggleResetPswd);
-                        $('#logreg-forms #btn-signup').click(toggleSignUp);
-                        $('#logreg-forms #cancel_signup').click(toggleSignUp);
-                    })
+                        $(() => {
+                            $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
+                            $('#logreg-forms #cancel_reset').click(toggleResetPswd);
+                            $('#logreg-forms #btn-signup').click(toggleSignUp);
+                            $('#logreg-forms #cancel_signup').click(toggleSignUp);
+                        })
         </script>
     </body>
 

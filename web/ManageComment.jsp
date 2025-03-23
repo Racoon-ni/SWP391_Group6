@@ -47,6 +47,16 @@
                 border-color: #1a73e8;
                 color: white;
             }
+            .btn-warning-user {
+                background-color: #ff5722; /* Deep Orange */
+                border-color: #e64a19;
+                color: white;
+            }
+
+            .btn-warning-user:hover {
+                background-color: #d84315; /* Darker Orange */
+                border-color: #bf360c;
+            }
         </style>
     </head>
     <body>
@@ -73,46 +83,61 @@
             </form>
 
             <!-- Account Table -->
+            <form action="manageComment" method="get" class="d-flex mb-3">
+                <select name="status" class="form-select me-2">
+                    <option value="">-- Select Status --</option>
+                    <option value="0" ${param.status == '0' ? 'selected' : ''}>Active</option>
+                    <option value="1" ${param.status == '1' ? 'selected' : ''}>Reported</option>
+                    <option value="2" ${param.status == '2' ? 'selected' : ''}>Disabled</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
             <table class="table table-bordered">
                 <thead class="table-primary">
                     <tr>
+                        <th>Comment_Id</th>
+                        <th>Book_Id</th>
                         <th>Username</th>
-                        <th>Email</th>
-                        <th>Role</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Create At</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${accountList}" var="acc">
+                    <c:forEach items="${interactionList}" var="interac">
                         <tr>
-                            <td>${acc.username}</td>
-                            <td>${acc.email}</td>
+                            <td>${interac.interaction_id}</td>
+                            <td>${interac.book_id}</td>
+                            <td>${interac.username}</td>
+                            <td>${interac.rating}</td>
+                            <td>${interac.comment}</td>
+                            <td>${interac.created_at}</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${acc.role}">
-                                        <span class="badge bg-danger">Admin</span>
+                                    <c:when test="${interac.status == 0}">
+                                        <span class="badge bg-primary">Active</span>
+                                    </c:when>
+                                    <c:when test="${interac.status == 1}">
+                                        <a href="viewReportedUsers?commentId=${interac.interaction_id}" class="badge bg-danger" style="text-decoration: none;">
+                                            Reported
+                                        </a>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="badge bg-primary">Customer</span>
+                                        <a href="viewReportedUsers?commentId=${interac.interaction_id}" class="badge bg-secondary" style="text-decoration: none;">
+                                            Disable
+                                        </a>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
-                                <a href="editAccount.jsp?id=${acc.accountId}" class="btn btn-success btn-sm">Edit</a>
-                                <a href="detailsAccount.jsp?id=${acc.accountId}" class="btn btn-info btn-sm">Details</a>
                                 <c:if test="${!acc.role}">
-                                    <a href="deleteAccount?id=${acc.accountId}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                                    <a href="deleteComment?id=${interac.interaction_id}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
                                 </c:if>
-                                <c:choose>
-                                    <c:when test="${acc.status == 1}">
-                                        <a href="LockAccountController?id=${acc.accountId}" class="btn btn-lock btn-sm" onclick="return confirm('Are you sure?')">Lock</a>
-                                    </c:when>
-                                        
-                                    <c:when test="${acc.status == 0}">
-                                        <a href="LockAccountController?id=${acc.accountId}" class="btn btn-unlock btn-sm" onclick="return confirm('Are you sure?')">Unlock</a>
-                                    </c:when>
-                                </c:choose>
-
+                                <c:if test="${interac.status == 1}">
+                                    <a href="warningUser?id=${interac.account_id}&interaction_id=${interac.interaction_id}" class="btn btn-warning-user btn-sm">Warning User</a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

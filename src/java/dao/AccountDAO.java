@@ -50,7 +50,8 @@ public class AccountDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
-                        rs.getBoolean("role") // 1: admin, 0: user
+                        rs.getBoolean("role"), // 1: admin, 0: user
+                        rs.getInt("status") // 1: active, 0: inactive
                 );
             }
         } catch (SQLException e) {
@@ -62,7 +63,7 @@ public class AccountDAO {
     public Account getAccountById(int accountId) throws ClassNotFoundException {
         String sql = "SELECT a.account_id, a.username, a.email, a.password, a.role, "
                 + "FROM Account "
-                + "WHERE a.account_id = ?";
+                + "WHERE a.account_id = ? AND a.status = 1";
 
         // Kết nối và thực hiện truy vấn
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -76,7 +77,8 @@ public class AccountDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
-                        rs.getBoolean("role") // Lấy thông tin role (admin/user)
+                        rs.getBoolean("role"), // Lấy thông tin role (admin/user)
+                        rs.getInt("status") // Lấy thông tin trạng thái (active/inactive)
                 );
             }
         } catch (SQLException e) {
@@ -162,7 +164,8 @@ public class AccountDAO {
         }
         return false;
     }
-     // Kiểm tra xem username có tồn tại chưa
+    // Kiểm tra xem username có tồn tại chưa
+
     public boolean isAccountExists(String username) throws SQLException, ClassNotFoundException {
         String query = "SELECT COUNT(*) FROM Account WHERE username = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -246,7 +249,8 @@ public class AccountDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
-                        rs.getBoolean("role") // 1: admin, 0: user
+                        rs.getBoolean("role"),// 1: admin, 0: user
+                        rs.getInt("status")
                 );
                 accountList.add(acc);
             }
@@ -258,6 +262,18 @@ public class AccountDAO {
 
     public boolean deleteAccount(int accountID) throws ClassNotFoundException {
         String query = "DELETE FROM Account WHERE account_id = ?";
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, accountID);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean toggleLockAccount(int accountID) throws ClassNotFoundException {
+        String query = "UPDATE Account SET status = CASE WHEN status = 1 THEN 0 ELSE 1 END WHERE account_id = ?";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, accountID);
@@ -292,5 +308,72 @@ public class AccountDAO {
         return accountList;
     }
 
+    public boolean lockAccount(int accountId) {
+        String query = "UPDATE Account SET status = 2 WHERE account_id = ?";
+        try {
+            conn = new DBConnect().connect();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean unlockAccount(int accountId) {
+        Connection conn = null;
+        PreparedStatement psUpdate = null;
+        PreparedStatement psDelete = null;
+
+        try {
+            conn = new DBConnect().connect();
+            conn.setAutoCommit(false); // Bắt đầu transaction
+
+            // 1️⃣ Cập nhật trạng thái User về Active (status = 1)
+            String updateQuery = "UPDATE Account SET status = 1 WHERE account_id = ?";
+            psUpdate = conn.prepareStatement(updateQuery);
+            psUpdate.setInt(1, accountId);
+            int updateResult = psUpdate.executeUpdate();
+
+            // 2️⃣ Xóa hết WarningUser của user này
+            String deleteQuery = "DELETE FROM UserWarning WHERE account_id = ?";
+            psDelete = conn.prepareStatement(deleteQuery);
+            psDelete.setInt(1, accountId);
+            int deleteResult = psDelete.executeUpdate();
+
+            // 3️⃣ Nếu cả hai câu lệnh thành công thì commit transaction
+            if (updateResult > 0) {
+                conn.commit();
+                return true;
+            } else {
+                conn.rollback();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) {
+                    conn.rollback(); // Hoàn tác nếu có lỗi
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                if (psUpdate != null) {
+                    psUpdate.close();
+                }
+                if (psDelete != null) {
+                    psDelete.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 
 }
