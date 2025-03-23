@@ -7,8 +7,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login / Registration Form</title>
-        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
         <link rel="stylesheet" href="css/login.css">
+
+        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     </head>
 
     <body>
@@ -31,8 +34,14 @@
                 <form action="login" method="post" onsubmit="">
                     <h1>Login here.</h1>
                     <input name="username" type="text" id="username" placeholder="Username" required="" autofocus="" />
-                    <!--<input type="email" name="email" placeholder="Email" />-->
+
                     <input name="password" type="password" id="password" placeholder="Password" required="" />
+<!--
+                    <input type="password" name="currentPassword" class="form-control border-primary" required id="currentPassword">
+                    <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>-->
+
                     <div class="content">
                         <div class="checkbox">
                             <input type="checkbox" name="checkbox" id="checkbox" />
@@ -76,35 +85,52 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script>
-                    function validateForm() {
-                        var username = document.getElementById("inputEmail").value;
-                        var password = document.getElementById("inputPassword").value;
+            function validateForm() {
+                var username = document.getElementById("inputEmail").value;
+                var password = document.getElementById("inputPassword").value;
 
-                        if (username.trim() === "" || password.trim() === "") {
-                            alert("Please enter both username and password");
-                            return false;
-                        }
-                        return true;
-                    }
+                if (username.trim() === "" || password.trim() === "") {
+                    alert("Please enter both username and password");
+                    return false;
+                }
+                return true;
+            }
 
-                    function toggleResetPswd(e) {
-                        e.preventDefault();
-                        $('#logreg-forms .form-signin').toggle();
-                        $('#logreg-forms .form-reset').toggle();
-                    }
+            function toggleResetPswd(e) {
+                e.preventDefault();
+                $('#logreg-forms .form-signin').toggle();
+                $('#logreg-forms .form-reset').toggle();
+            }
 
-                    function toggleSignUp(e) {
-                        e.preventDefault();
-                        $('#logreg-forms .form-signin').toggle();
-                        $('#logreg-forms .form-signup').toggle();
-                    }
+            function toggleSignUp(e) {
+                e.preventDefault();
+                $('#logreg-forms .form-signin').toggle();
+                $('#logreg-forms .form-signup').toggle();
+            }
 
-                    $(() => {
-                        $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
-                        $('#logreg-forms #cancel_reset').click(toggleResetPswd);
-                        $('#logreg-forms #btn-signup').click(toggleSignUp);
-                        $('#logreg-forms #cancel_signup').click(toggleSignUp);
-                    })
+            $(() => {
+                $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
+                $('#logreg-forms #cancel_reset').click(toggleResetPswd);
+                $('#logreg-forms #btn-signup').click(toggleSignUp);
+                $('#logreg-forms #cancel_signup').click(toggleSignUp);
+            })
+
+            document.getElementById('toggleCurrentPassword').addEventListener('click', function (e) {
+                togglePassword('password', this);
+            });
+            function togglePassword(inputId, button) {
+                var input = document.getElementById(inputId);
+                var icon = button.querySelector('i');
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
         </script>
     </body>
 

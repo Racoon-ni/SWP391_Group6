@@ -24,12 +24,14 @@ public class Book {
     private int volumeNumber;
     private String bookType;
     private int createdBy;
+    private boolean isDelete;
 
     // Các thuộc tính mới cần thêm
     private String authorName;  // Tên tác giả
     private String seriesName;  // Tên bộ sách (nếu có)
     private String categories;  // Danh mục sách (dạng chuỗi cách nhau bằng dấu phẩy)
-
+    
+    
     // Constructor đầy đủ
     public Book(int book_id, String title, int authorId, String description, double price,
             String coverImage, String filePath, String publisher, int publicationYear,
@@ -50,6 +52,36 @@ public class Book {
         this.volumeNumber = volumeNumber;
         this.bookType = bookType;
         this.createdBy = createdBy;
+    }
+
+    public Book(int book_id, String title, int authorId, String description, double price, String coverImage, String filePath, String publisher, int publicationYear, int stockQuantity, String language, int seriesId, int volumeNumber, String bookType, int createdBy, boolean isDelete) {
+        this.book_id = book_id;
+        this.title = title;
+        this.authorId = authorId;
+        this.description = description;
+        this.price = price;
+        this.coverImage = coverImage;
+        this.filePath = filePath;
+        this.publisher = publisher;
+        this.publicationYear = publicationYear;
+        this.stockQuantity = stockQuantity;
+        this.language = language;
+        this.seriesId = seriesId;
+        this.volumeNumber = volumeNumber;
+        this.bookType = bookType;
+        this.createdBy = createdBy;
+        this.isDelete = isDelete;
+        
+    }
+
+    
+    
+    public Book(int aInt, String string, String string0, String string1, double aDouble, String string2, String string3, int aInt0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Book(int aInt, String string, String string0, String string1, double aDouble, String string2, String string3) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     // Getter & Setter cho các thuộc tính mới
@@ -197,4 +229,13 @@ public class Book {
     public void setCreatedBy(int createdBy) {
         this.createdBy = createdBy;
     }
+
+    public boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete;
+    }
+    
 }

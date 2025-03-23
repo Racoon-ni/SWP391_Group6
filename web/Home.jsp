@@ -64,6 +64,8 @@
                                             <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
                                         </c:if>
 
+                                        <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
+
                                     </div>
                                 </div>
                             </div>
