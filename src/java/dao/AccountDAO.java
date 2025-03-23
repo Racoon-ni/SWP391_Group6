@@ -22,16 +22,16 @@ public class AccountDAO {
 
     Connection conn = null;
 
-//    /**
-//     *
-//     */
-//    public AccountDAO() {
-//        try {
-//            conn = DBConnect.connect();
-//        } catch (ClassNotFoundException | SQLException ex) {
-//            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+    // /**
+    // *
+    // */
+    // public AccountDAO() {
+    // try {
+    // conn = DBConnect.connect();
+    // } catch (ClassNotFoundException | SQLException ex) {
+    // Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+    // }
+    // }
     PreparedStatement ps = null;
     ResultSet rs = null;
 
@@ -66,8 +66,8 @@ public class AccountDAO {
                 + "WHERE a.account_id = ? AND a.status = 1";
 
         // Kết nối và thực hiện truy vấn
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, accountId);  // Gán giá trị accountId vào truy vấn
+        try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountId); // Gán giá trị accountId vào truy vấn
             ResultSet rs = ps.executeQuery();
 
             // Kiểm tra nếu có kết quả trả về
@@ -84,12 +84,13 @@ public class AccountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;  // Nếu không tìm thấy người dùng
+        return null; // Nếu không tìm thấy người dùng
     }
 
-    public boolean updateAccount(int accountId, String username, String password, String email) throws SQLException, ClassNotFoundException {
+    public boolean updateAccount(int accountId, String username, String password, String email)
+            throws SQLException, ClassNotFoundException {
         String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE accountId = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.setString(3, email);
@@ -168,80 +169,30 @@ public class AccountDAO {
 
     public boolean isAccountExists(String username) throws SQLException, ClassNotFoundException {
         String query = "SELECT COUNT(*) FROM Account WHERE username = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                int count = rs.getInt(1); // lấy giá trị COUNT(*)
+                return count > 0; // nếu > 0 là đã tồn tại
             }
-        }
-        // Nếu có kết quả và COUNT(*) > 0 thì tài khoản đã tồn tại
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-        return false;// Mặc định trả về false nếu có lỗi xảy ra
-    }
 
-    // Thêm tài khoản vào database
-//    public boolean addAccount(Account account) {
-//        String query = "INSERT INTO Users (username, password, email) VALUES (?, ?, ?)";
-//        try (Connection conn = DBConnect.connect();
-//             PreparedStatement pstmt = conn.prepareStatement(query)) {
-//            pstmt.setString(1, account.getUsername());
-//            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
-//            pstmt.setString(3, account.getEmail());
-//            return pstmt.executeUpdate() > 0;
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//    public boolean addAccount(Account account) {
-//        String query = "INSERT INTO [dbo].Account ([username], [password], [email]) VALUES (?, ?, ?)";
-//        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-//            pstmt.setString(1, account.getUsername());
-//            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
-//            pstmt.setString(3, account.getEmail());
-//
-//            System.out.println("⚡ Thực thi SQL: " + pstmt.toString()); // Debug SQL
-//            int rowsAffected = pstmt.executeUpdate();
-//
-//            if (rowsAffected > 0) {
-//                System.out.println("✅ Tài khoản đã được thêm vào database!");
-//            } else {
-//                System.out.println("❌ Không thể thêm tài khoản!");
-//            }
-//
-//            return rowsAffected > 0;
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace(); // Hiển thị lỗi SQL chi tiết
-//        }
-//        return false;
-//    }
-    //Thêm tài khoản mới vảo database
-    public boolean addAccount(Account account) {
-        String query = "INSERT INTO Account (username, password, email) VALUES (?, ?, ?)";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, account.getUsername());
-            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
-            pstmt.setString(3, account.getEmail());
-
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // log lỗi
         }
-        return false;
+        return false; // lỗi hoặc không tìm thấy username
     }
 
-    //Lấy tất cả các account có trong dữ liệu
+    // Lấy tất cả các account có trong dữ liệu
     public List<Account> getAllAccounts() throws ClassNotFoundException, SQLException {
         List<Account> accountList = new ArrayList<>();
         String query = "SELECT * FROM Account"; // Truy vấn lấy tất cả tài khoản
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query);  ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBConnect.connect();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 Account acc = new Account(
@@ -249,9 +200,8 @@ public class AccountDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
-                        rs.getBoolean("role"),// 1: admin, 0: user
-                        rs.getInt("status")
-                );
+                        rs.getBoolean("role"), // 1: admin, 0: user
+                        rs.getInt("status"));
                 accountList.add(acc);
             }
         } catch (SQLException e) {
@@ -263,7 +213,7 @@ public class AccountDAO {
     public boolean deleteAccount(int accountID) throws ClassNotFoundException {
         String query = "DELETE FROM Account WHERE account_id = ?";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, accountID);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -275,7 +225,7 @@ public class AccountDAO {
     public boolean toggleLockAccount(int accountID) throws ClassNotFoundException {
         String query = "UPDATE Account SET status = CASE WHEN status = 1 THEN 0 ELSE 1 END WHERE account_id = ?";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, accountID);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -288,11 +238,11 @@ public class AccountDAO {
         List<Account> accountList = new ArrayList<>();
         String query = "SELECT * FROM Account WHERE username LIKE ?";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, "%" + keyword + "%"); // Tìm username chứa từ khóa
 
-            try ( ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Account acc = new Account();
                     acc.setAccountId(rs.getInt("account_id"));

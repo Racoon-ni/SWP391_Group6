@@ -31,7 +31,7 @@ public class Account {
 
     public Account(String username, String password, String email) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    } 
 
     public int getAccountId() {
         return accountId;

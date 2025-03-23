@@ -13,23 +13,19 @@
 
     <body>
         <div class="container" id="container">
-            <div class="form-container register-container">
-                <form action="signup" method="post">
-                    <h1>Register here.</h1>
-                    <input name="username" type="text" id="username" placeholder="User name" required="" autofocus="">
-                    <input name="password" type="password" id="password" placeholder="Password" required autofocus="">
-                    <input name="repass" type="password" id="user-repeatpass" placeholder="Repeat Password" required autofocus="">
-                    <button type="submit">Register</button>
-                    <span>or use your account</span>
-                    <div class="social-container">
-                        <a href="#" class="social"><i class="lni lni-google"></i></a>
-                    </div>
-                </form>
-            </div>
 
             <div class="form-container login-container">
+                <c:if test="${not empty error}">
+                    <div style="color: red; text-align: center; margin-bottom: 15px;">
+                        ${error}
+                    </div>
+                </c:if>
                 <form action="login" method="post" onsubmit="">
                     <h1>Login here.</h1>
+                    <% String successMsg = (String) request.getAttribute("successMsg"); %>
+                    <% if (successMsg != null) { %>
+                    <p style="color: green;"><%= successMsg %></p>
+                    <% } %>
                     <input name="username" type="text" id="username" placeholder="Username" required="" autofocus="" />
                     <!--<input type="email" name="email" placeholder="Email" />-->
                     <input name="password" type="password" id="password" placeholder="Password" required="" />
@@ -39,7 +35,7 @@
                             <label>Remember me</label>
                         </div>
                         <div class="pass-link">
-                            <a href="#">Forgot your password?</a>
+                            <a href="forgotPassword.jsp">Forgot your password?</a>
                         </div>
                     </div>
                     <%
@@ -66,17 +62,19 @@
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
                         <h1 class="title">Hello <br> friends</h1>
-                        <p>if Yout have an account, login here and have fun</p>
+                        <p>if You have an account, login here and have fun</p>
                         <button class="ghost" id="login">Login
                             <i class="lni lni-arrow-left login"></i>
                         </button>
                     </div>
                     <div class="overlay-panel overlay-right">
-                        <h1 class="title">Start yout <br> journy now</h1>
-                        <p>if you don't have an account yet, join us and start your journey.</p>
-                        <button class="ghost" id="register">Register
-                            <i class="lni lni-arrow-right register"></i>
-                        </button>
+                        <h1 class="title">Start your <br> journey now</h1>
+                        <p>If you don't have an account yet, join us and start your journey.</p>
+                        <a href="register.jsp">
+                            <button class="ghost">Register
+                                <i class="lni lni-arrow-right register"></i>
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
