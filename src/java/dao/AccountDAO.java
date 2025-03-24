@@ -185,7 +185,8 @@ public class AccountDAO {
     //Lấy tất cả các account có trong dữ liệu
     public List<Account> getAllAccounts() throws ClassNotFoundException, SQLException {
         List<Account> accountList = new ArrayList<>();
-        String query = "SELECT * FROM Account"; // Truy vấn lấy tất cả tài khoản
+        String query = "SELECT *" 
+                + "FROM Account a JOIN User_Profile up ON a.account_id = up.account_id"; // Truy vấn lấy tất cả tài khoản
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query);  ResultSet rs = pstmt.executeQuery()) {
 
@@ -195,7 +196,11 @@ public class AccountDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
-                        rs.getBoolean("role") // 1: admin, 0: user
+                        rs.getBoolean("role"), // 1: admin, 0: user
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getString("image")
                 );
                 accountList.add(acc);
             }
@@ -275,6 +280,31 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public Account getAccountByIdForAdmin(int accountId) throws ClassNotFoundException {
+        String sql = "SELECT a.account_id, a.username, a.email, a.role, up.full_name, up.phone, up.address, up.image "
+                + "FROM Account a JOIN User_Profile up ON a.account_id = up.account_id WHERE a.account_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Account(
+                        rs.getInt("account_id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getBoolean("role"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getString("image")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
