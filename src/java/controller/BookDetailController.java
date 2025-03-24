@@ -1,6 +1,7 @@
 package controller;
 
 import dao.BookDAO;
+import entity.Account;
 import entity.Book;
 import entity.Category;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +51,7 @@ public class BookDetailController extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         String bookId = request.getParameter("book_id");
+
         if (bookId == null || bookId.isEmpty()) {
             response.sendRedirect("error.jsp");
             return;

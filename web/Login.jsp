@@ -16,23 +16,19 @@
 
     <body>
         <div class="container" id="container">
-            <div class="form-container register-container">
-                <form action="signup" method="post">
-                    <h1>Register here.</h1>
-                    <input name="username" type="text" id="username" placeholder="User name" required="" autofocus="">
-                    <input name="password" type="password" id="password" placeholder="Password" required autofocus="">
-                    <input name="repass" type="password" id="user-repeatpass" placeholder="Repeat Password" required autofocus="">
-                    <button type="submit">Register</button>
-                    <span>or use your account</span>
-                    <div class="social-container">
-                        <a href="#" class="social"><i class="lni lni-google"></i></a>
-                    </div>
-                </form>
-            </div>
 
             <div class="form-container login-container">
+                <c:if test="${not empty error}">
+                    <div style="color: red; text-align: center; margin-bottom: 15px;">
+                        ${error}
+                    </div>
+                </c:if>
                 <form action="login" method="post" onsubmit="">
                     <h1>Login here.</h1>
+                    <% String successMsg = (String) request.getAttribute("successMsg"); %>
+                    <% if (successMsg != null) { %>
+                    <p style="color: green;"><%= successMsg %></p>
+                    <% } %>
                     <input name="username" type="text" id="username" placeholder="Username" required="" autofocus="" />
 
                     <input name="password" type="password" id="password" placeholder="Password" required="" />
@@ -48,9 +44,21 @@
                             <label>Remember me</label>
                         </div>
                         <div class="pass-link">
-                            <a href="#">Forgot your password?</a>
+                            <a href="forgotPassword.jsp">Forgot your password?</a>
                         </div>
                     </div>
+                    <%
+                    String error = request.getParameter("error");
+                    if ("invalid".equals(error)) {
+                    %>
+                    <script>alert('Wrong username or password!');</script>
+                    <%
+                        } else if ("locked".equals(error)) {
+                    %>
+                    <script>alert('Your account has been locked, please contact admin to unlock!');</script>
+                    <%
+                        }
+                    %>
                     <button type="submit">Login</button>
                     <span>or use your account</span>
                     <div class="social-contaniner">
@@ -63,17 +71,19 @@
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
                         <h1 class="title">Hello <br> friends</h1>
-                        <p>if Yout have an account, login here and have fun</p>
+                        <p>if You have an account, login here and have fun</p>
                         <button class="ghost" id="login">Login
                             <i class="lni lni-arrow-left login"></i>
                         </button>
                     </div>
                     <div class="overlay-panel overlay-right">
-                        <h1 class="title">Start yout <br> journy now</h1>
-                        <p>if you don't have an account yet, join us and start your journey.</p>
-                        <button class="ghost" id="register">Register
-                            <i class="lni lni-arrow-right register"></i>
-                        </button>
+                        <h1 class="title">Start your <br> journey now</h1>
+                        <p>If you don't have an account yet, join us and start your journey.</p>
+                        <a href="register.jsp">
+                            <button class="ghost">Register
+                                <i class="lni lni-arrow-right register"></i>
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -85,6 +95,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script>
+<<<<<<< HEAD
             function validateForm() {
                 var username = document.getElementById("inputEmail").value;
                 var password = document.getElementById("inputPassword").value;
@@ -131,6 +142,37 @@
                     icon.classList.add('fa-eye');
                 }
             }
+=======
+                        function validateForm() {
+                            var username = document.getElementById("inputEmail").value;
+                            var password = document.getElementById("inputPassword").value;
+
+                            if (username.trim() === "" || password.trim() === "") {
+                                alert("Please enter both username and password");
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        function toggleResetPswd(e) {
+                            e.preventDefault();
+                            $('#logreg-forms .form-signin').toggle();
+                            $('#logreg-forms .form-reset').toggle();
+                        }
+
+                        function toggleSignUp(e) {
+                            e.preventDefault();
+                            $('#logreg-forms .form-signin').toggle();
+                            $('#logreg-forms .form-signup').toggle();
+                        }
+
+                        $(() => {
+                            $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
+                            $('#logreg-forms #cancel_reset').click(toggleResetPswd);
+                            $('#logreg-forms #btn-signup').click(toggleSignUp);
+                            $('#logreg-forms #cancel_signup').click(toggleSignUp);
+                        })
+>>>>>>> 5969258d2346294a4874948f9246419422533aa2
         </script>
     </body>
 

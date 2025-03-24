@@ -14,22 +14,24 @@ public class Account {
     private String username;
     private String password;
     private String email;
+    private int status; // 1: active, 0: inactive, 2 block comment
     private boolean role; // true: admin, false: user
 
     public Account() {
     }
 
-    public Account(int accountId, String username, String password, String email, boolean role) {
+    public Account(int accountId, String username, String password, String email, boolean role, int status) {
         this.accountId = accountId;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.status = status;
     }
 
     public Account(String username, String password, String email) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    } 
 
     public int getAccountId() {
         return accountId;
@@ -71,6 +73,13 @@ public class Account {
         this.role = role;
     }
      
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
     
     
 }

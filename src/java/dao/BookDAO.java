@@ -155,7 +155,7 @@ public class BookDAO {
                 + "FROM Books b "
                 + "JOIN Author a ON b.author_id = a.author_id "
                 + "LEFT JOIN BookSeries s ON b.series_id = s.series_id "
-                + "WHERE b.book_id = ?";
+                + "WHERE b.book_id = ?"; //AND b.isDelete = 0";
         try {
             conn = new DBConnect().connect();
             ps = conn.prepareStatement(sql);
