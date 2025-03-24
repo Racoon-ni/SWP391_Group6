@@ -53,8 +53,8 @@ public class AllBookController extends HttpServlet {
             page = 1; // Mặc định về trang đầu tiên nếu lỗi
         }
 
+        // Lấy danh mục
         try {
-            // Lấy danh mục
             List<Category> categories = categoryDAO.getAllCategories();
             request.setAttribute("categories", categories);
         } catch (Exception ex) {
@@ -62,16 +62,27 @@ public class AllBookController extends HttpServlet {
             request.setAttribute("error", "Không thể tải danh mục.");
         }
 
+        // Lấy sách theo danh mục và bộ lọc
         try {
-            // Lấy sách theo danh mục và bộ lọc
+            // Nếu categoryId hoặc filter null, có thể xử lý mặc định hoặc bỏ qua
+            if (categoryId == null) {
+                categoryId = ""; // Lấy tất cả danh mục
+            }
+            if (filter == null) {
+                filter = ""; // Lọc không có gì
+            }
+
             List<Book> books = bookDAO.getBooksByCategoryAndFilter(categoryId, filter, page, booksPerPage);
             int totalBooks = bookDAO.getTotalBooks(categoryId, filter);
-            int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
 
+            // Tính số trang
+            int totalPages = (totalBooks > 0) ? (int) Math.ceil((double) totalBooks / booksPerPage) : 1;
+
+            // Đặt các thuộc tính vào request
             request.setAttribute("books", books);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("currentPage", page);
-            request.setAttribute("selectedCategory", categoryId);
+            request.setAttribute("categoryId", categoryId);
             request.setAttribute("selectedFilter", filter);
         } catch (Exception e) {
             Logger.getLogger(AllBookController.class.getName()).log(Level.SEVERE, "Lỗi khi lấy danh sách sách", e);

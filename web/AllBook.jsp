@@ -1,25 +1,45 @@
-<%@page import="java.util.List"%>
-<%@page import="entity.Book"%>
+<%@page import="entity.Account"%>
 <%@page import="entity.Category"%>
-<%@page import="dao.BookDAO"%>
+<%@ page import="entity.Book" %>
+
 <%@page import="dao.CategoryDAO"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="dao.BookDAO"%>
+<%@page import="java.util.List"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%
     int currentPage = 1;
     int booksPerPage = 8;
-    String selectedCategory = request.getParameter("category");
-    
+
+    // Lấy categoryId từ URL (nếu có)
+    String categoryId = request.getParameter("categoryId");
+
+    // Lấy trang hiện tại từ URL (nếu có)
     if (request.getParameter("page") != null) {
         currentPage = Integer.parseInt(request.getParameter("page"));
     }
 
+    // Khởi tạo DAO
     BookDAO bookDAO = new BookDAO();
     CategoryDAO categoryDAO = new CategoryDAO();
-    List<Book> books = bookDAO.getBooksByCategoryAndFilter(selectedCategory, null, currentPage, booksPerPage);
+
+    // Lấy danh sách sách theo category (nếu có) và phân trang
+    List<Book> books = bookDAO.getBooksByCategoryAndFilter(categoryId, null, currentPage, booksPerPage);
+
+    // Lấy danh sách danh mục
     List<Category> categories = categoryDAO.getAllCategory();
-    int totalBooks = bookDAO.getTotalBooks(selectedCategory, null);
+
+    // Lấy tổng số sách để tính số trang
+    int totalBooks = bookDAO.getTotalBooks(categoryId, null);
     int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
+
+    // Đặt danh sách sách vào request để hiển thị trên JSP
+    request.setAttribute("books", books);
+    request.setAttribute("categories", categories);
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("currentPage", currentPage);
 %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,10 +47,10 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link rel="stylesheet" type="text/css" href="css/allBook.css">
-       
     </head>
     <body>
         <jsp:include page="Menu.jsp"></jsp:include>
+
             <div class="container mt-4">
                 <div class="row">
                     <!-- Sidebar Categories -->
@@ -38,8 +58,8 @@
                         <h3>Loại sách</h3>
                         <ul class="list-group">
                         <% for (Category category : categories) { %>
-                        <li class="list-group-item <%= (selectedCategory != null && selectedCategory.equals(String.valueOf(category.getCategoryId()))) ? "active" : "" %>">
-                            <a href="AllBook.jsp?category=<%= category.getCategoryId() %>" class="text-decoration-none"><%= category.getCategoryName() %></a>
+                        <li class="list-group-item <%= (categoryId != null && categoryId.equals(String.valueOf(category.getCategoryId()))) ? "active" : "" %>">
+                            <a href="AllBook.jsp?categoryId=<%= category.getCategoryId() %>&page=1" class="text-decoration-none"><%= category.getCategoryName() %></a>
                         </li>
                         <% } %>
                     </ul>
@@ -70,7 +90,7 @@
                         <ul class="pagination justify-content-center py-5">
                             <% for (int i = 1; i <= totalPages; i++) { %>
                             <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
-                                <a class="page-link" href="AllBook.jsp?page=<%= i %>&category=<%= selectedCategory != null ? selectedCategory : "" %>"><%= i %></a>
+                                <a class="page-link" href="AllBook.jsp?page=<%= i %>&categoryId=<%= categoryId != null ? categoryId : "" %>"><%= i %></a>
                             </li>
                             <% } %>
                         </ul>

@@ -122,7 +122,7 @@
                                                             <div class="menu-column"> <!-- Mở cột mới -->
                                                             </c:if>
 
-                                                            <li><a href="Category.jsp?id=${cate.categoryId}">${cate.categoryName}</a></li>
+                                                            <li><a href="AllBook.jsp?categoryId=${cate.categoryId}">${cate.categoryName}</a></li>
 
                                                             <c:if test="${status.index % itemsPerColumn == itemsPerColumn - 1 or status.last}">
                                                             </div> <!-- Đóng cột -->

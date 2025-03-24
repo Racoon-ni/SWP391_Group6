@@ -286,23 +286,59 @@ public class BookDAO {
     // Lấy 4 sách ngẫu nhiên, kèm tên tác giả và danh mục
     public List<Book> getTop4() {
         List<Book> list = new ArrayList<>();
-        String query = "SELECT TOP 4 b.*, a.name AS authorName, "
-                + "(SELECT STRING_AGG(c.name, ', ') FROM BookCategory bc "
-                + " JOIN Category c ON bc.category_id = c.category_id WHERE bc.book_id = b.book_id) AS categories "
-                + "FROM Books b JOIN Author a ON b.author_id = a.author_id ORDER BY NEWID()";
+        String query = "SELECT TOP 4 b.book_id, b.title, b.cover_image, b.price, a.name AS authorName, "
+                + "MAX(i.rating) AS maxRating "
+                + "FROM Books b "
+                + "JOIN Author a ON b.author_id = a.author_id "
+                + "JOIN Interaction i ON b.book_id = i.book_id "
+                + "WHERE i.action = 'Review' AND i.rating > 0 "
+                + "GROUP BY b.book_id, b.title, b.cover_image, b.price, a.name "
+                + "ORDER BY maxRating DESC"; // Sắp xếp theo rating cao nhất
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
             conn = new DBConnect().connect();
+            if (conn == null) {
+                System.err.println("Không thể kết nối đến database!");
+                return list; // Trả về danh sách rỗng nếu không kết nối được
+            }
+
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
+
             while (rs.next()) {
                 Book book = extractBookFromResultSet(rs);
-                list.add(book);
+                if (book != null) {
+                    list.add(book);
+                } else {
+                    System.err.println("Lỗi: extractBookFromResultSet trả về null cho một record.");
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("Lỗi SQL: " + e.getMessage());
+            e.printStackTrace(); // In đầy đủ stack trace để debug
         } catch (Exception e) {
+            System.err.println("Lỗi không xác định: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            closeResources();
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
+            }
         }
+        System.out.println("getTop4() trả về danh sách có kích thước: " + list.size()); // Thêm dòng này
         return list;
     }
 
