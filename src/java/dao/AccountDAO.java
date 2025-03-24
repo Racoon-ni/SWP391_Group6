@@ -282,8 +282,7 @@ public class AccountDAO {
         return accountList;
     }
 
-<<<<<<< HEAD
-=======
+
     public boolean lockAccount(int accountId) {
         String query = "UPDATE Account SET status = 2 WHERE account_id = ?";
         try {
@@ -352,5 +351,5 @@ public class AccountDAO {
         return false;
     }
 
->>>>>>> 5969258d2346294a4874948f9246419422533aa2
+
 }
