@@ -1,52 +1,41 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Manage Books</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
         <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+            }
             .sidebar {
                 width: 250px;
                 height: 100vh;
-                background-color: #2C3E50;
-                padding-top: 20px;
-                position: fixed;
-                left: 0;
-                top: 0;
-                overflow-y: auto;
-            }
-
-            .sidebar h4 {
+                background: #343a40;
                 color: white;
-                text-align: center;
-                margin-bottom: 20px;
+                position: fixed;
+                padding-top: 20px;
             }
-
             .sidebar a {
                 display: block;
                 color: white;
                 padding: 10px 20px;
                 text-decoration: none;
-                font-size: 16px;
+                transition: 0.3s;
             }
-
-            .sidebar a:hover,
-            .sidebar a.active {
-                background-color: #1A252F;
+            .sidebar a:hover {
+                background: #495057;
             }
-
-            .sidebar a i {
-                margin-right: 10px;
+            .content {
+                margin-left: 260px;
+                padding: 20px;
             }
-
-            body {
-                margin-left: 250px; /* Để nội dung chính không bị che */
-            }
-
         </style>
-
     </head>
     <body>
         <div class="d-flex">
@@ -62,53 +51,55 @@
             <a href="warningUsers"><i class="fas fa-exclamation-triangle"></i> Người dùng bị cảnh báo</a>
             </div>
 
-            <!-- Main Content -->
-            <div class="container mt-4">
-                <!-- Header -->
-                <div class="header bg-dark text-white p-2">
-                    <h3>Manage Books</h3>
-                </div>
+        <!-- Main Content -->
+        <div class="content">
+            <h3 class="bg-dark text-white p-2 text-center">Manage Books</h3>
 
-                <!-- Search Form -->
-                <form action="SearchBookController" method="post" class="my-3 d-flex">
-                    <input type="text" name="search" class="form-control me-2" placeholder="Search by title...">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
+            <!-- Search Form -->
+            <form action="SearchBookController" method="post" class="my-3 d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search by title...">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
 
-                <!-- Add Book Button -->
-                <div class="my-3">
-                    <a href="AddBook.jsp" class="btn btn-success">Add Book</a>
-                </div>
+            <!-- Add Book Button -->
+            <div class="my-3">
+                <a href="AddBook.jsp" class="btn btn-success">Add Book</a>
+            </div>
 
-                <!-- Book Table -->
-                <table class="table table-bordered">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Price</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${list}" var="p">
-                            <c:if test="${p.isDelete == false}">
-                                <tr>
-                                    <td>${p.title}</td>
-                                    <td>${p.authorId}</td>
-                                    <td>${p.price}$</td>
-                                    <td>
-                                        <a href="editBook.jsp?id=${p.book_id}" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="detailsBook.jsp?id=${p.book_id}" class="btn btn-info btn-sm">Details</a>
-                                        <a href="deleteBook?id=${p.book_id}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
-                                    </td>
-                                </tr>
-                            </c:if>
-                        </c:forEach>
-                    </tbody>
-                </table>
+            <!-- Book Table -->
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${list}" var="p">
+                        <c:if test="${p.isDelete == false}">
+                            <tr>
+                                <td>${p.title}</td>
+                                <td>${p.authorId}</td>
+                                <td>${p.price}$</td>
+                                <td>
+                                    <a href="editBook.jsp?id=${p.book_id}" class="btn btn-success btn-sm">Edit</a>
+                                    <a href="BookDetailByAdmin?id=${p.book_id}" class="btn btn-info btn-sm">Details</a>
+                                    <a href="deleteBook?id=${p.book_id}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                                </td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <!-- Footer -->
+            <div class="text-center mt-4">
+                <p>&copy; Company 2025</p>
             </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+</html>
