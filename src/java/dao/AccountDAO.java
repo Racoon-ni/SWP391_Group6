@@ -68,6 +68,8 @@ public class AccountDAO {
         // Kết nối và thực hiện truy vấn
         try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, accountId); // Gán giá trị accountId vào truy vấn
+        try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountId); // Gán giá trị accountId vào truy vấn
             ResultSet rs = ps.executeQuery();
 
             // Kiểm tra nếu có kết quả trả về
@@ -85,18 +87,13 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return null; // Nếu không tìm thấy người dùng
+        return null; // Nếu không tìm thấy người dùng
     }
 
 <<<<<<< HEAD
     public boolean updateAccount(int accountId, String username, String password, String email) throws SQLException, ClassNotFoundException {
         String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE account_id = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement stmt = conn.prepareStatement(sql)) {
-=======
-    public boolean updateAccount(int accountId, String username, String password, String email)
-            throws SQLException, ClassNotFoundException {
-        String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE accountId = ?";
         try (Connection conn = DBConnect.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
->>>>>>> 5969258d2346294a4874948f9246419422533aa2
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.setString(3, email);
@@ -105,9 +102,10 @@ public class AccountDAO {
         }
     }
 
-    public boolean updateAccount(int accountId, String full_name, String phone, String address, String image) throws ClassNotFoundException {
+    public boolean updateAccount(int accountId, String full_name, String phone, String address, String image)
+            throws ClassNotFoundException {
         String sql = "UPDATE Account SET full_name = ?, phone = ?, address = ?, image = ? WHERE account_id = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, full_name);
             ps.setString(2, phone);
             ps.setString(3, address);
@@ -208,10 +206,14 @@ public class AccountDAO {
     }
 
     // Lấy tất cả các account có trong dữ liệu
+    // Lấy tất cả các account có trong dữ liệu
     public List<Account> getAllAccounts() throws ClassNotFoundException, SQLException {
         List<Account> accountList = new ArrayList<>();
         String query = "SELECT * FROM Account"; // Truy vấn lấy tất cả tài khoản
 
+        try (Connection conn = DBConnect.connect();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
         try (Connection conn = DBConnect.connect();
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 ResultSet rs = pstmt.executeQuery()) {
