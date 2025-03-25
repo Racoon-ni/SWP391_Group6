@@ -115,5 +115,8 @@
         <%
             }
         %>
+        <a href="Cart.jsp" class="btn btn-outline-dark mb-2">
+            <i class="fas fa-shopping-cart"></i> Quay lại Giỏ hàng
+        </a>
     </body>
 </html>

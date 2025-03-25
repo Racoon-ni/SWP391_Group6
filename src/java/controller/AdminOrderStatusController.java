@@ -42,9 +42,16 @@ public class AdminOrderStatusController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+
             int orderId = Integer.parseInt(request.getParameter("order_id"));
             String status = request.getParameter("status");
-
+            // 🛑 Kiểm tra trạng thái hiện tại trước khi cho phép cập nhật
+            Order currentOrder = orderDAO.getOrderById(orderId);
+            if (currentOrder == null || "Cancelled".equalsIgnoreCase(currentOrder.getStatus())) {
+                response.sendRedirect(request.getContextPath() + "/manageOrder?error=cannot_edit_cancelled");
+                return;
+            }
+            
             orderDAO.updateOrderStatus(orderId, status);
 
             // ✅ Redirect tuyệt đối về controller danh sách đơn hàng

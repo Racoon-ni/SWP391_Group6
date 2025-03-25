@@ -2,91 +2,25 @@
 <%@ page import="java.util.List" %>
 <%@ page import="entity.CartItem" %>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Xác nhận thanh toán</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f7f7f7;
-                padding: 30px;
-            }
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận thanh toán</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #f8f9fa;">
 
-            .container {
-                width: 80%;
-                margin: auto;
-                background: white;
-                padding: 25px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px #ccc;
-            }
 
-            h2 {
-                text-align: center;
-                color: #333;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 25px;
-            }
-
-            th, td {
-                padding: 12px;
-                text-align: center;
-                border-bottom: 1px solid #ddd;
-            }
-
-            th {
-                background-color: #efefef;
-            }
-
-            .form-section {
-                margin-top: 25px;
-            }
-
-            .form-group {
-                margin-bottom: 15px;
-            }
-
-            label {
-                font-weight: bold;
-            }
-
-            input[type="text"], select {
-                width: 100%;
-                padding: 8px;
-                margin-top: 5px;
-                box-sizing: border-box;
-            }
-
-            .btn {
-                background-color: #28a745;
-                color: white;
-                padding: 10px 20px;
-                font-size: 16px;
-                border: none;
-                border-radius: 4px;
-                margin-top: 20px;
-                cursor: pointer;
-            }
-
-            .btn:hover {
-                background-color: #218838;
-            }
-
-        </style>
-    </head>
-    <body>
-
-        <div class="container">
-            <h2>💳 Xác nhận thanh toán</h2>
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-body px-5 py-4">
+            <h2 class="text-center fw-bold mb-4">💳 Xác nhận thanh toán</h2>
 
             <form method="post" action="place-order">
-                <table>
-                    <thead>
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered text-center align-middle bg-white">
+                        <thead class="table-light">
                         <tr>
                             <th>Tên sách</th>
                             <th>Định dạng</th>
@@ -94,8 +28,8 @@
                             <th>Số lượng</th>
                             <th>Tổng</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <%
                             List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
                             double totalPrice = 0;
@@ -107,26 +41,28 @@
                         <tr>
                             <td><%= item.getBookTitle() %></td>
                             <td><%= item.getBook_format() %></td>
-                            <td><%= item.getPrice() %> $</td>
+                            <td>$<%= item.getPrice() %></td>
                             <td><%= item.getQuantity() %></td>
-                            <td><%= itemTotal %> $</td>
+                            <td class="text-success fw-bold">$<%= itemTotal %></td>
                         </tr>
                         <% } %>
-                        <tr>
-                            <td colspan="4" style="text-align:right"><strong>Tổng cộng:</strong></td>
-                            <td><strong><%= totalPrice %> $</strong></td>
+                        <tr class="fw-bold bg-light">
+                            <td colspan="4" class="text-end">Tổng cộng:</td>
+                            <td class="text-success">$<%= totalPrice %></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
 
-                <div class="form-section">
-                    <div class="form-group">
-                        <label for="shipping_address">📦 Địa chỉ giao hàng:</label>
-                        <input type="text" name="shipping_address" id="shipping_address" required>
+                <!-- Thông tin đặt hàng -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="shipping_address" class="form-label">📦 Địa chỉ giao hàng:</label>
+                        <input type="text" class="form-control" name="shipping_address" id="shipping_address" required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="payment_method">💰 Phương thức thanh toán:</label>
+                    <div class="col-md-6 mb-3">
+                        <label for="payment_method" class="form-label">💰 Phương thức thanh toán:</label>
                         <select name="payment_method" id="payment_method" class="form-select" required>
                             <option value="">-- Chọn phương thức --</option>
                             <option value="Cash on Delivery">Thanh toán khi nhận hàng</option>
@@ -135,12 +71,22 @@
                             <option value="PayPal">PayPal</option>
                         </select>
                     </div>
+                </div>
 
-
-                    <button type="submit" class="btn">✅ Xác nhận đặt hàng</button>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="Cart.jsp" class="btn btn-outline-dark">
+                        <i class="fas fa-arrow-left"></i> Quay lại Giỏ hàng
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        ✅ Xác nhận đặt hàng
+                    </button>
                 </div>
             </form>
         </div>
+    </div>
+</div>
 
-    </body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

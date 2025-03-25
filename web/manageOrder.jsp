@@ -99,19 +99,26 @@
                             <td>${order.accountId}</td>
                             <td>${order.orderDate}</td>
                             <td>
-                                <form method="post" action="admin/order/edit" class="d-flex">
-                                    <input type="hidden" name="order_id" value="${order.orderId}">
-                                    <select name="status" class="form-select me-2">
-                                        <option value="Pending"     ${order.status eq 'Pending' ? 'selected' : ''}>Đang chờ</option>
-                                        <option value="Processing"  ${order.status eq 'Processing' ? 'selected' : ''}>Đang xử lý</option>
-                                        <option value="Shipped"     ${order.status eq 'Shipped' ? 'selected' : ''}>Đang giao</option>
-                                        <option value="Delivered"   ${order.status eq 'Delivered' ? 'selected' : ''}>Đã giao</option>
-                                        <option value="Cancelled"   ${order.status eq 'Cancelled' ? 'selected' : ''}>Đã Hủy</option>
-                                    </select>
-
-                                    <button type="submit" class="btn btn-primary btn-sm">Cập nhật</button>
-                                </form>
+                                <c:choose>
+                                    <c:when test="${order.status eq 'Cancelled'}">
+                                        <span class="badge bg-secondary">${order.status}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form method="post" action="admin/order/edit" class="d-flex">
+                                            <input type="hidden" name="order_id" value="${order.orderId}">
+                                            <select name="status" class="form-select me-2">
+                                                <option value="Pending"     ${order.status eq 'Pending' ? 'selected' : ''}>Đang chờ</option>
+                                                <option value="Processing"  ${order.status eq 'Processing' ? 'selected' : ''}>Đang xử lý</option>
+                                                <option value="Shipped"     ${order.status eq 'Shipped' ? 'selected' : ''}>Đang giao</option>
+                                                <option value="Delivered"   ${order.status eq 'Delivered' ? 'selected' : ''}>Đã giao</option>
+                                                <option value="Cancelled"   ${order.status eq 'Cancelled' ? 'selected' : ''}>Đã Hủy</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary btn-sm">Cập nhật</button>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
+
                             <td>${order.shippingAddress}</td>
                             <td>
                                 <a href="order-detail?order_id=${order.orderId}" class="btn btn-info btn-sm">Chi tiết</a>
