@@ -1,3 +1,4 @@
+// src/controller/PlaceOrderController.java
 package controller;
 
 import dao.CartDAO;
@@ -34,8 +35,11 @@ public class PlaceOrderController extends HttpServlet {
 
         String shippingAddress = request.getParameter("shipping_address");
         String paymentMethod = request.getParameter("payment_method");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
 
-        if (paymentMethod == null || shippingAddress == null || paymentMethod.trim().isEmpty() || shippingAddress.trim().isEmpty()) {
+        if (shippingAddress == null || shippingAddress.trim().isEmpty()
+                || paymentMethod == null || paymentMethod.trim().isEmpty()) {
             response.sendRedirect("Cart.jsp");
             return;
         }
@@ -48,7 +52,7 @@ public class PlaceOrderController extends HttpServlet {
             List<OrderItem> orderItems = new ArrayList<>();
             double totalPrice = 0;
 
-            // ✅ Nếu mua từ giỏ hàng
+            // ✅ Mua từ giỏ hàng
             List<CartItem> cartItems = cartDAO.getCartItems(account.getAccount_id());
             if (cartItems != null && !cartItems.isEmpty()) {
                 for (CartItem item : cartItems) {
@@ -62,7 +66,7 @@ public class PlaceOrderController extends HttpServlet {
                     orderItems.add(orderItem);
                 }
             } else {
-                // ✅ Nếu mua 1 cuốn sách (Mua Ngay)
+                // ✅ Mua ngay 1 cuốn
                 Book selectedBook = (Book) session.getAttribute("selectedBook");
                 Integer quantity = (Integer) session.getAttribute("selectedQuantity");
                 String format = (String) session.getAttribute("selectedFormat");
@@ -82,31 +86,31 @@ public class PlaceOrderController extends HttpServlet {
                 orderItems.add(orderItem);
             }
 
-            // Giao dịch
             int transactionId = transactionDAO.createTransaction(account.getAccount_id(), totalPrice, paymentMethod);
 
-            // Tạo đơn hàng
             Order order = new Order();
             order.setAccountId(account.getAccount_id());
             order.setTransactionId(transactionId);
             order.setOrderDate(new Timestamp(System.currentTimeMillis()));
             order.setStatus("Pending");
             order.setShippingAddress(shippingAddress);
+            order.setPhone(phone);
+            order.setEmail(email);
 
             int orderId = orderDAO.createOrder(order);
 
-            for (OrderItem oi : orderItems) {
-                oi.setOrderId(orderId);
+            for (OrderItem item : orderItems) {
+                item.setOrderId(orderId);
             }
 
             orderDAO.createOrderItems(orderItems);
 
-            // Nếu mua từ giỏ hàng thì clear giỏ
-            if (!orderItems.isEmpty() && cartItems != null && !cartItems.isEmpty()) {
+            // ✅ Dọn giỏ nếu có
+            if (cartItems != null && !cartItems.isEmpty()) {
                 cartDAO.clearCart(account.getAccount_id());
             }
 
-            // ✅ Clear session nếu mua 1 quyển
+            // ✅ Dọn session nếu mua ngay
             session.removeAttribute("selectedBook");
             session.removeAttribute("selectedQuantity");
             session.removeAttribute("selectedFormat");

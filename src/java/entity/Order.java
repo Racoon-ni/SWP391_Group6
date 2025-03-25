@@ -11,6 +11,9 @@ public class Order {
     private String status;
     private String shippingAddress;
     private List<OrderItem> orderItems; // Optional: dùng cho hiển thị chi tiết đơn hàng
+    private String phone;
+    private String email;
+    
 
     public Order() {}
 
@@ -78,4 +81,22 @@ public class Order {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    
 } 
