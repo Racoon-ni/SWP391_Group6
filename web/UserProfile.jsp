@@ -61,23 +61,13 @@
 
     <body>
 
-        <!-- Popup Notification System -->
+        <!-- Popup Notification -->
         <div id="successNotification" class="notification-popup success" style="display:none;">
             <strong>Thành công!</strong> <span id="successMessage"></span>
         </div>
         <div id="errorNotification" class="notification-popup error" style="display:none;">
             <strong>Thất bại!</strong> <span id="errorMessage"></span>
         </div>
-
-        <% if (session.getAttribute("errorMessage") != null) { %>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                document.getElementById('errorMessage').innerText = '<%= session.getAttribute("errorMessage") %>';
-                showNotification('errorNotification');
-            });
-        </script>
-        <% session.removeAttribute("errorMessage"); %>
-        <% } %>
 
         <% if (session.getAttribute("successMessage") != null) { %>
         <script>
@@ -89,6 +79,15 @@
         <% session.removeAttribute("successMessage"); %>
         <% } %>
 
+        <% if (session.getAttribute("errorMessage") != null) { %>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('errorMessage').innerText = '<%= session.getAttribute("errorMessage") %>';
+                showNotification('errorNotification');
+            });
+        </script>
+        <% session.removeAttribute("errorMessage"); %>
+        <% } %>
 
 
         <!-- Navbar -->
@@ -120,22 +119,7 @@
             <div class="content-card"
                  style="margin-bottom: 0; border-radius: 0 0 4px 4px; background: #23272A; position: relative;">
                 <div class="row">
-                    <!--                    <div class="col-md-4 sidebar-container">
-                                            <div class="sidebar">
-                                                <div class="avatar-container">
-                                                    <img src="<%= user.getImage() %>" class="avatar" alt="Avatar">
-                                                    <div class="display-name"><%= user.getFullName() %></div>
-                                                </div>
-                                                <h4 class="text-warning">Cài đặt tài khoản</h4>
-                                                <a id="sidebar-account" class="<%= activeTab.equals("personalInfo") ? "active" : "" %>" onclick="changeTab('personalInfo')">Tài khoản của tôi</a>
-                                                <a id="sidebar-profile" class="<%= activeTab.equals("profile") ? "active" : "" %>" onclick="changeTab('profile')">Hồ sơ</a>
-                                                <h4 class="text-warning mt-4">Thanh toán</h4>
-                                                <a id="sidebar-history" class="<%= activeTab.equals("paymentHistory") ? "active" : "" %>" onclick="changeTab('paymentHistory')">Lịch sử thanh toán</a>
-                                                <h4 class="text-warning">Cài đặt bảo mật</h4>
-                                                <a id="sidebar-password" class="<%= activeTab.equals("changePassword") ? "active" : "" %>" onclick="changeTab('changePassword')">Đổi mật khẩu</a>
-                                                <a ></a>
-                                            </div>
-                                        </div>-->
+
                     <div class="col-md-4 sidebar-container">
                         <div class="sidebar">
                             <div class="avatar-container">
@@ -234,9 +218,13 @@
                                     <div class="p-4 bg-light text-dark rounded shadow-lg">
                                         <h4 class="fw-bold text-primary mb-3">Lịch sử thanh toán</h4>
 
-                                        <% for (TransactionDetails trans : transactionDetails) {
-                                            Book book = bookDAO.getBookById(trans.getBook_id());
+                                        <% 
+                                           for (TransactionDetails trans : transactionDetails) {
+                                           Book book = bookDAO.getBookById(trans.getBook_id());
+                                           String shipping = transactionDetailsDAO.getShippingAddress(trans.getTransactionId());
+                                           trans.setShippingAddress(shipping); // Gán địa chỉ vào object TransactionDetails
                                         %>
+
 
                                         <!-- Bắt đầu một "cart item" -->
                                         <div class="card mb-3">
@@ -342,36 +330,44 @@
 
                 <script>
 
-                    document.getElementById('profileForm').addEventListener('submit', function (event) {
-                        let fullName = document.getElementById('fullNameInput').value.trim();
-                        let phone = document.getElementById('phoneInput').value.trim();
-                        let address = document.getElementById('addressInput').value.trim();
+                    function validateProfileForm() {
+                        let isValid = true;
 
-                        let hasError = false;
+                        // Lấy giá trị input
+                        let fullName = document.getElementById("fullNameInput").value.trim();
+                        let phone = document.getElementById("phoneInput").value.trim();
+                        let address = document.getElementById("addressInput").value.trim();
 
-                        if (fullName === '') {
-                            document.getElementById('fullNameError').innerText = 'Tên hiển thị không được để trống';
-                            hasError = true;
-                        } else {
-                            document.getElementById('fullNameError').innerText = '';
+                        // Xóa thông báo lỗi cũ
+                        document.getElementById("fullNameError").innerText = "";
+                        document.getElementById("phoneError").innerText = "";
+                        document.getElementById("addressError").innerText = "";
+
+                        // Kiểm tra từng trường có bị trống không
+                        if (fullName === "") {
+                            document.getElementById("fullNameError").innerText = "Tên hiển thị không được để trống.";
+                            isValid = false;
                         }
 
-                        if (phone === '') {
-                            document.getElementById('phoneError').innerText = 'Số điện thoại không được để trống';
-                            hasError = true;
-                        } else {
-                            document.getElementById('phoneError').innerText = '';
+                        if (phone === "") {
+                            document.getElementById("phoneError").innerText = "Số điện thoại không được để trống.";
+                            isValid = false;
+                        } else if (!/^\d{10,11}$/.test(phone)) {
+                            document.getElementById("phoneError").innerText = "Số điện thoại không hợp lệ (10-11 chữ số).";
+                            isValid = false;
                         }
 
-                        if (address === '') {
-                            document.getElementById('addressError').innerText = 'Địa chỉ không được để trống';
-                            hasError = true;
-                        } else {
-                            document.getElementById('addressError').innerText = '';
+                        if (address === "") {
+                            document.getElementById("addressError").innerText = "Địa chỉ không được để trống.";
+                            isValid = false;
                         }
 
-                        if (hasError) {
-                            event.preventDefault();
+                        return isValid;
+                    }
+
+                    document.getElementById("profileForm").addEventListener("submit", function (event) {
+                        if (!validateProfileForm()) {
+                            event.preventDefault(); // Ngăn form submit nếu có lỗi
                         }
                     });
 
@@ -486,8 +482,6 @@
                             icon.classList.add('fa-eye');
                         }
                     }
-
-                    // Tab 3 - Lịch sử thanh toán
 
 
                     // Hàm xử lý mua lại sách (chưa có API backend, có thể điều hướng đến trang mua lại)
