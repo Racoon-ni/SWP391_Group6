@@ -97,7 +97,7 @@
         </button>
     </form>
 
-    <form action="BuyBookServlet" method="POST">
+    <form action="buy-now" method="POST">
         <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
         <input type="hidden" name="book_format" value="Physical">
         <input type="hidden" name="quantity" value="1">

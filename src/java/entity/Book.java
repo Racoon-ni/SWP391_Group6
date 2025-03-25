@@ -30,6 +30,9 @@ public class Book {
     private String authorName;  // Tên tác giả
     private String seriesName;  // Tên bộ sách (nếu có)
     private String categories;  // Danh mục sách (dạng chuỗi cách nhau bằng dấu phẩy)
+
+    public Book() {
+    }
     
     
     // Constructor đầy đủ

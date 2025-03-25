@@ -566,7 +566,7 @@ public class BookDAO {
     }
 
     public boolean addBook(Book book) throws ClassNotFoundException {
-        String query = "INSERT INTO Books (title, author, description, price, cover_image, file_path) "
+        String query = "INSERT INTO Books (title, author_id, description, price, cover_image, file_path) "
                 + "VALUES (?, ?, ?, ?, ?, ?,0)";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {

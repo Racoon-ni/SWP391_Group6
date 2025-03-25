@@ -1,30 +1,28 @@
 package dao;
 
 import config.DBConnect;
-import config.DBConnect;
-import entity.Transactions;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class TransactionDAO {
-    public boolean createTransaction(Transactions transaction) throws ClassNotFoundException {
-        String sql = "INSERT INTO Transactions (account_id, total_price, payment_method, transaction_date, status) " +
-                     "VALUES (?, ?, ?, ?, ?)";
+
+    public int createTransaction(int accountId, double totalPrice, String paymentMethod) throws Exception {
+        String query = "INSERT INTO Transactions (account_id, total_price, payment_method, is_paid, status) " +
+                       "VALUES (?, ?, ?, 1, 'Completed')";
 
         try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, transaction.getAccount_id());
-            ps.setDouble(2, transaction.getTotal_price());
-            ps.setString(3, transaction.getPayment_method());
-            ps.setTimestamp(4, transaction.getTransaction_date());
-            ps.setString(5, transaction.getStatus());
+             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            stmt.setInt(1, accountId);
+            stmt.setDouble(2, totalPrice);
+            stmt.setString(3, paymentMethod);
+
+            int affected = stmt.executeUpdate();
+            if (affected == 0) throw new SQLException("Creating transaction failed, no rows affected.");
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) return rs.getInt(1);
+                else throw new SQLException("Creating transaction failed, no ID obtained.");
+            }
         }
     }
 }

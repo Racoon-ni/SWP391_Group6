@@ -177,28 +177,24 @@
 
 /* Định dạng cho nút Add to Cart */
 .btn-cart {
-    background-color: #c5a992;  /* Màu be dịu nhẹ */
-    color: black;
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #6f4e37; /* Màu nâu cafe */
+    color: white;
     font-weight: bold;
-    border: 2px solid #8c7a63;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    width: auto; /* Chỉnh lại kích thước vừa với nội dung */
-    transition: all 0.3s ease-in-out;
-}
-
-.btn-cart i {
-    margin-right: 5px; /* Khoảng cách giữa icon và chữ */
+    font-size: 14px;
+    border: none;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
 .btn-cart:hover {
-    background-color: #b09176;
-    border-color: #6e5947;
+    background-color: #5a3c28;
+    transform: scale(1.05);
 }
+
 
 /* Định dạng cho nút Buy Book */
 .btn-buy {

@@ -46,6 +46,9 @@
         <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
         <a href="manageAccount"><i class="fas fa-user"></i> Quản lí người dùng</a>
         <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
+        <a href="manageOrder"><i class="fas fa-box"></i> Quản lí đơn hàng</a>
+
+
     </div>
     
     <!-- Main Content -->
