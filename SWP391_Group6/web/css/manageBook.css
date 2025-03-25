@@ -1,0 +1,37 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 4, 2025, 5:03:48 PM
+    Author     : Oanh Nguyen
+*/
+
+/* Header */
+.header {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Table Styling */
+.table {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table th {
+    text-align: center;
+}
+
+/* Button Styling */
+.btn-sm {
+    margin: 2px;
+}
+
+/* Footer */
+.footer {
+    padding: 10px;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    color: #6c757d;
+}
