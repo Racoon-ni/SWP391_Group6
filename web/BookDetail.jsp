@@ -4,7 +4,7 @@
     Author     : SE18-CE180628-Nguyen Pham Doan Trang
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="entity.Book, dao.BookDAO, java.util.List, entity.Account, entity.Interaction, dao.InteractionDAO, java.text.SimpleDateFormat" %>
+<%@ page import="entity.Book, dao.BookDAO, dao.UserWarningDAO, java.util.List, entity.Account, entity.Interaction, dao.InteractionDAO, java.text.SimpleDateFormat" %>
 
 <%
     String bookIdParam = request.getParameter("book_id");
@@ -13,6 +13,8 @@
     List<Interaction> comments = null;
     double averageRating = 0;
     int reviewCount = 0;
+    boolean hasCommented = false;
+    boolean isBlockedComment = false;
 
     if (bookIdParam != null) {
         try {
@@ -36,6 +38,19 @@
     
     // Get logged-in user
     Account loginAccount = (Account) session.getAttribute("account");
+    isBlockedComment = (loginAccount != null && loginAccount.getStatus() == 2);
+    if (loginAccount != null && comments != null) {
+        int userId = loginAccount.getAccountId(); // Lấy ID người dùng đăng nhập
+        UserWarningDAO warningDAO = new UserWarningDAO(); // Thêm DAO kiểm tra report
+        for (Interaction comment : comments) {
+            if (comment.getAccount_id() == userId) {
+                hasCommented = true;
+            }
+            // Kiểm tra nếu user đã report comment này chưa
+            boolean hasReported = warningDAO.hasUserReportedComment(userId, comment.getInteraction_id());
+            comment.setHasReported(hasReported); // Gán để hiển thị trên JSP
+        }
+    }
 %>
 
 <!DOCTYPE html>
@@ -221,13 +236,17 @@
 
                         <!-- Comment form for logged-in users -->
                         <% if (loginAccount != null) { %>
+                        <% if (isBlockedComment) { %>
+                        <div class="alert alert-danger" role="alert">
+                            Tài khoản của bạn đã bị chặn bình luận. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.
+                        </div>
+                        <% } else if (!hasCommented) { %>
                         <div class="card mb-4 p-3">
                             <h5>Viết đánh giá của bạn</h5>
                             <form action="CommentController" method="post">
                                 <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
 
                                 <div class="mb-3">
-
                                     <div class="rating">
                                         <div class="mb-3">
                                             <label for="rating" class="form-label">Đánh giá sao</label>
@@ -255,10 +274,16 @@
                             </form>
                         </div>
                         <% } else { %>
+                        <div class="alert alert-warning" role="alert">
+                            Bạn đã đánh giá cuốn sách này trước đó.
+                        </div>
+                        <% } %>
+                        <% } else { %>
                         <div class="alert alert-info" role="alert">
                             Vui lòng <a href="Login.jsp" class="alert-link">đăng nhập</a> để viết đánh giá.
                         </div>
                         <% } %>
+
 
                         <!-- Display existing comments -->
                         <% if (comments != null && !comments.isEmpty()) { %>
@@ -288,12 +313,14 @@
                                             </div>
                                         </div>
                                         <div class="ms-auto">
-                                            <% if (loginAccount != null && comment.getAccount_id() != loginAccount.getAccountId()) { %>
-                                            <button type="button" class="btn btn-sm btn-outline-danger report-comment-btn" 
-                                                    data-interaction-id="<%= comment.getInteraction_id() %>"
-                                                    data-bs-toggle="modal" data-bs-target="#reportCommentModal">
-                                                <i class="fa fa-flag"></i> Report
-                                            </button>
+                                            <% if (loginAccount != null && comment.getAccount_id() != loginAccount.getAccountId() && !comment.isHasReported()) { %>
+                                                <button type="button" class="btn btn-sm btn-outline-danger report-comment-btn" 
+                                                        data-interaction-id="<%= comment.getInteraction_id() %>"
+                                                        data-bs-toggle="modal" data-bs-target="#reportCommentModal">
+                                                    <i class="fa fa-flag"></i> Report
+                                                </button>
+                                            <% } else if (loginAccount != null && comment.isHasReported()) { %>
+                                                <span class="badge bg-secondary">Reported</span>
                                             <% } %>
                                         </div>
                                     </div>
@@ -332,16 +359,11 @@
                                 <label for="reportReason" class="form-label">Reason for reporting:</label>
                                 <select class="form-select" id="reportReason" name="reason" required>
                                     <option value="">Select a reason</option>
-                                    <option value="offensive">Offensive or inappropriate language</option>
-                                    <option value="spam">Spam or advertising</option>
-                                    <option value="harassment">Harassment or bullying</option>
-                                    <option value="incorrect">Factually incorrect</option>
-                                    <option value="other">Other reason</option>
+                                    <option value="Offensive or inappropriate language">Offensive or inappropriate language</option>
+                                    <option value="Spam or advertising">Spam or advertising</option>
+                                    <option value="Harassment or bullying">Harassment or bullying</option>
+                                    <option value="Factually incorrect">Factually incorrect</option>
                                 </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="reportDetails" class="form-label">Additional details (optional):</label>
-                                <textarea class="form-control" id="reportDetails" name="details" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

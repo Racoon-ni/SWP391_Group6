@@ -3,12 +3,12 @@
 <%@ page import="java.util.List" %>
 <%@ page import="entity.Book" %>
 <%@ page import="dao.BookDAO" %>
-<%@ page import="entity.Category, dao.CategoryDAO" %> 
+<%@ page import="entity.Category, dao.CategoryDAO" %>
 <%@ page import="java.util.List, java.util.Map" %>
 
 <jsp:useBean id="bookDAO" class="dao.BookDAO" scope="request"/>
 
-<% List<Category> categories = (List<Category>) request.getAttribute("topCategories"); 
+<% List<Category> categories = (List<Category>) request.getAttribute("topCategories");
 %>
 
 <!DOCTYPE html>
@@ -62,10 +62,7 @@
                                     <div class="col-md-6">
                                         <h2 class="display-4 text-dark font-weight-bold">${book.title}</h2>
                                         <p class="lead text-muted">${book.description}</p>
-                                        <c:if test="${not empty book.book_id}">
-                                            <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
-                                        </c:if>
-
+                                        <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
                                     </div>
                                 </div>
                             </div>
@@ -84,8 +81,7 @@
             </div>
         </section>
 
-        <!-- Some quality items Featured Books -->
-        <!-- Featured Books -->
+        <!-- Featured Books Section -->
         <section id="featured-books" class="py-5 my-5">
             <div class="container">
                 <div class="row">
@@ -94,9 +90,31 @@
                             <div class="title"><span>Some quality items</span></div>
                             <h2 class="section-title">Featured Books</h2>
                         </div>
-
                         <div class="product-list" data-aos="fade-up">
                             <div class="row d-flex flex-wrap align-items-stretch">
+                                <!-- Kiểm tra nếu list4B không rỗng -->
+                                <c:if test="${not empty list4B}">
+                                    <c:forEach var="book" items="${list4B}">
+                                        <div class="col-md-3">
+                                            <div class="product-item">
+                                                <figure class="product-style">
+                                                    <img src="${book.coverImage}" alt="${book.title}" class="product-item">
+                                                    <button type="button" class="add-to-cart">Add to Cart</button>
+                                                </figure>
+                                                <figcaption>
+                                                    <h3><a href="BookDetail.jsp?book_id=${book.bookId}">${book.title}</a></h3>
+                                                    <span>${book.authorName}</span>
+                                                    <div class="item-price">$ ${book.price}</div>
+                                                </figcaption>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </c:if>
+
+                                <!-- Nếu list4B rỗng -->
+                                <c:if test="${empty list4B}">
+                                    <p class="text-center">No featured books available.</p>
+                                </c:if>
                                 <% 
                                     List<Book> list4B = (List<Book>) request.getAttribute("list4B");
                                     if (list4B != null && !list4B.isEmpty()) {
@@ -133,17 +151,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="btn-wrap align-right">
-                            <a href="allBook" class="btn-accent-arrow">
-                                View all products <i class="icon icon-ns-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         </section>
 
@@ -159,17 +166,17 @@
 
                         <ul class="tabs">
                             <li data-tab-target="#all-genre" class="active tab">All Genre</li>
-                                <% 
+                                <%
                                     List<Category> topCategories = (List<Category>) request.getAttribute("topCategories");
                                     if (topCategories != null) {
-                                        for (Category category : topCategories) { 
+                                        for (Category category : topCategories) {
                                 %>
                             <li data-tab-target="#<%= category.getCategoryName().toLowerCase().replaceAll("\\s+", "-") %>" class="tab">
                                 <%= category.getCategoryName() %>
                             </li>
-                            <% 
+                            <%
                                     }
-                                } 
+                                }
                             %>
                         </ul>
 
@@ -177,10 +184,10 @@
                             <!-- All Genres -->
                             <div id="all-genre" data-tab-content class="active">
                                 <div class="row">
-                                    <% 
+                                    <%
                                         List<Book> list8Book = (List<Book>) request.getAttribute("list8Book");
-                                        if (list8Book != null && !list8Book.isEmpty()) { 
-                                            for (Book book : list8Book) { 
+                                        if (list8Book != null && !list8Book.isEmpty()) {
+                                            for (Book book : list8Book) {
                                     %>
                                     <div class="col-md-3">
                                         <div class="product-item">
@@ -204,17 +211,16 @@
                                             </figcaption>
                                         </div>
                                     </div>
-                                    <% 
+                                    <%
                                             }
-                                        } else { 
+                                        } else {
                                     %>
                                     <p class="text-center">No books available.</p>
                                     <% } %>
                                 </div>
                             </div>
-
                             <!-- Books by Category -->
-                            <% 
+                            <%
                                 Map<Integer, List<Book>> booksByCategory = (Map<Integer, List<Book>>) request.getAttribute("booksByCategory");
                                 if (topCategories != null) {
                                     for (Category category : topCategories) {
@@ -222,9 +228,9 @@
                             %>
                             <div id="<%= category.getCategoryName().toLowerCase().replaceAll("\\s+", "-") %>" data-tab-content>
                                 <div class="row">
-                                    <% 
-                                        if (books != null && !books.isEmpty()) { 
-                                            for (Book book : books) { 
+                                    <%
+                                        if (books != null && !books.isEmpty()) {
+                                            for (Book book : books) {
                                     %>
                                     <div class="col-md-3">
                                         <div class="product-item">
@@ -246,17 +252,17 @@
                                             </figcaption>
                                         </div>
                                     </div>
-                                    <% 
+                                    <%
                                             }
-                                        } else { 
+                                        } else {
                                     %>
                                     <p class="text-center">No books in this category.</p>
                                     <% } %>
                                 </div>
                             </div>
-                            <% 
+                            <%
                                     }
-                                } 
+                                }
                             %>
                         </div>
                     </div>

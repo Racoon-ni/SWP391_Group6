@@ -41,6 +41,11 @@ public class LoginController extends HttpServlet {
                 String errorScript = "<script>alert('Sai tên đăng nhập hoặc mật khẩu!'); window.location='Login.jsp';</script>";
                 response.getWriter().println(errorScript);
             } else {
+                // Kiểm tra nếu tài khoản bị khóa
+                if (account.getStatus() == 0) {
+                    response.sendRedirect("Login.jsp?error=locked"); // Chuyển hướng với thông báo tài khoản bị khóa
+                    return;
+                }
                 HttpSession session = request.getSession();
                 session.setAttribute("account", account); // Lưu Object Account
                 session.setAttribute("account_id", account.getAccountId()); // Lưu ID
@@ -54,7 +59,6 @@ public class LoginController extends HttpServlet {
                     session.setMaxInactiveInterval(1000);
                     response.sendRedirect("home");
                     //request.getRequestDispatcher("Home.jsp").forward(request, response);
-
                 }
             }
         } catch (Exception ex) {

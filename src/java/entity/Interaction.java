@@ -17,7 +17,8 @@ public class Interaction {
     private String username;
     private Date created_at;
     private int status;
-
+    private boolean hasReported;
+            
     public static final int STATUS_NORMAL = 0;
     public static final int STATUS_REPORTED = 1;
     public static final int STATUS_DISABLED = 2;
@@ -150,5 +151,13 @@ public class Interaction {
 
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
+    }
+
+    public boolean isHasReported() {
+        return hasReported;
+    }
+
+    public void setHasReported(boolean hasReported) {
+        this.hasReported = hasReported;
     }
 }

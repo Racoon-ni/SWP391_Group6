@@ -155,7 +155,7 @@ public class BookDAO {
                 + "FROM Books b "
                 + "JOIN Author a ON b.author_id = a.author_id "
                 + "LEFT JOIN BookSeries s ON b.series_id = s.series_id "
-                + "WHERE b.book_id = ?"; //AND b.isDelete = 0";
+                + "WHERE b.book_id = ?";
         try {
             conn = new DBConnect().connect();
             ps = conn.prepareStatement(sql);
@@ -289,23 +289,59 @@ public class BookDAO {
     // Lấy 4 sách ngẫu nhiên, kèm tên tác giả và danh mục
     public List<Book> getTop4() {
         List<Book> list = new ArrayList<>();
-        String query = "SELECT TOP 4 b.*, a.name AS authorName, "
-                + "(SELECT STRING_AGG(c.name, ', ') FROM BookCategory bc "
-                + " JOIN Category c ON bc.category_id = c.category_id WHERE bc.book_id = b.book_id) AS categories "
-                + "FROM Books b JOIN Author a ON b.author_id = a.author_id ORDER BY NEWID()";
+        String query = "SELECT TOP 4 b.book_id, b.title, b.cover_image, b.price, a.name AS authorName, "
+                + "MAX(i.rating) AS maxRating "
+                + "FROM Books b "
+                + "JOIN Author a ON b.author_id = a.author_id "
+                + "JOIN Interaction i ON b.book_id = i.book_id "
+                + "WHERE i.action = 'Review' AND i.rating > 0 "
+                + "GROUP BY b.book_id, b.title, b.cover_image, b.price, a.name "
+                + "ORDER BY maxRating DESC"; // Sắp xếp theo rating cao nhất
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
             conn = new DBConnect().connect();
+            if (conn == null) {
+                System.err.println("Không thể kết nối đến database!");
+                return list; // Trả về danh sách rỗng nếu không kết nối được
+            }
+
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
+
             while (rs.next()) {
                 Book book = extractBookFromResultSet(rs);
-                list.add(book);
+                if (book != null) {
+                    list.add(book);
+                } else {
+                    System.err.println("Lỗi: extractBookFromResultSet trả về null cho một record.");
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("Lỗi SQL: " + e.getMessage());
+            e.printStackTrace(); // In đầy đủ stack trace để debug
         } catch (Exception e) {
+            System.err.println("Lỗi không xác định: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            closeResources();
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
+            }
         }
+        System.out.println("getTop4() trả về danh sách có kích thước: " + list.size()); // Thêm dòng này
         return list;
     }
 
@@ -536,16 +572,49 @@ public class BookDAO {
         }
     }
 
-    public boolean isBookExists(String title) throws ClassNotFoundException {
-        String query = "SELECT COUNT(*) FROM Books WHERE title = ? AND isDelete = 0";
+    public boolean isBookExists(String title, int auID) throws ClassNotFoundException {
+        String query = "SELECT COUNT(*) FROM Books WHERE title = ? AND author_id=?";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, title);
+            pstmt.setInt(2, auID);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
                 return rs.getInt(1) > 0; // Nếu COUNT > 0 thì sách đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isAuthorExists(String authorName) throws ClassNotFoundException {
+        String query = "SELECT COUNT(*) FROM Author WHERE name = ? "; // Giả sử có cột isDelete để kiểm tra xóa mềm
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, authorName);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0 thì tác giả đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isCategoryExists(String categoryName) throws ClassNotFoundException {
+        String query = "SELECT COUNT(*) FROM Category WHERE name = ? AND isDelete = 0"; // Giả sử có cột isDelete để kiểm tra xóa mềm
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, categoryName);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0 thì danh mục đã tồn tại
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -565,6 +634,119 @@ public class BookDAO {
         return false;
     }
 
+    public int getAuthorIdByName(String authorName) throws ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.connect(); // Kết nối đến cơ sở dữ liệu
+
+            // Câu lệnh SQL để lấy author_id dựa trên tên tác giả
+            String query = "SELECT author_id FROM Author WHERE name = ?"; // Giả sử có cột isDelete để kiểm tra xóa mềm
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, authorName);
+
+            // Thực thi câu lệnh SQL
+            rs = pstmt.executeQuery();
+
+            // Kiểm tra kết quả
+            if (rs.next()) {
+                return rs.getInt("author_id"); // Trả về author_id nếu tìm thấy
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1; // Trả về -1 nếu không tìm thấy hoặc có lỗi xảy ra
+    }
+
+    public int addAuthor(String authorName) throws ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.connect(); // Kết nối đến cơ sở dữ liệu
+
+            // Kiểm tra xem tác giả đã tồn tại chưa
+            if (isAuthorExists(authorName)) {
+                // Nếu tác giả đã tồn tại, lấy author_id
+                String getAuthorIdQuery = "SELECT author_id FROM Author WHERE name = ?";
+                pstmt = conn.prepareStatement(getAuthorIdQuery);
+                pstmt.setString(1, authorName);
+                rs = pstmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("author_id"); // Trả về author_id nếu tác giả đã tồn tại
+                }
+            } else {
+                // Nếu tác giả chưa tồn tại, thêm tác giả mới vào bảng Author
+                String insertAuthorQuery = "INSERT INTO Author (name) VALUES (?)";
+                pstmt = conn.prepareStatement(insertAuthorQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, authorName);
+                pstmt.executeUpdate();
+
+                // Lấy author_id vừa được tạo
+                rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1); // Trả về author_id mới
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1; // Trả về -1 nếu có lỗi xảy ra
+    }
+
+    public int addCategory(String categoryName) throws ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.connect(); // Kết nối đến cơ sở dữ liệu
+
+            // Kiểm tra xem danh mục đã tồn tại chưa
+            if (isCategoryExists(categoryName)) {
+                // Nếu danh mục đã tồn tại, lấy category_id
+                String getCategoryIdQuery = "SELECT category_id FROM Category WHERE name = ? ";
+                pstmt = conn.prepareStatement(getCategoryIdQuery);
+                pstmt.setString(1, categoryName);
+                rs = pstmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("category_id"); // Trả về category_id nếu danh mục đã tồn tại
+                }
     public boolean addBook(Book book) throws ClassNotFoundException {
         String query = "INSERT INTO Books (title, author_id, description, price, cover_image, file_path) "
                 + "VALUES (?, ?, ?, ?, ?, ?,0)";
@@ -573,19 +755,182 @@ public class BookDAO {
             if (conn != null) {
                 System.out.println("Connected to the database!");
             } else {
-                System.out.println("Failed to connect to the database.");
+                // Nếu danh mục chưa tồn tại, thêm danh mục mới vào bảng Category
+                String insertCategoryQuery = "INSERT INTO Category (name) VALUES (?)";
+                pstmt = conn.prepareStatement(insertCategoryQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, categoryName);
+                pstmt.executeUpdate();
+
+                // Lấy category_id vừa được tạo
+                rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1); // Trả về category_id mới
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1; // Trả về -1 nếu có lỗi xảy ra
+    }
+
+    public int addBook(Book book, int authorId) throws ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.connect(); // Kết nối đến cơ sở dữ liệu
+
+            // Câu lệnh SQL để thêm sách vào bảng Books và trả về book_id
+            String insertBookQuery = "INSERT INTO Books (title, author_id, description, price, cover_image, file_path, book_type) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(insertBookQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            // Thiết lập các tham số cho câu lệnh SQL từ đối tượng Book
             pstmt.setString(1, book.getTitle());
-            pstmt.setString(2, book.getAuthorName());
+            pstmt.setInt(2, authorId);
             pstmt.setString(3, book.getDescription());
             pstmt.setDouble(4, book.getPrice());
             pstmt.setString(5, book.getCoverImage());
             pstmt.setString(6, book.getFilePath());
+            pstmt.setString(7, book.getBookType());
 
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
+            // Thực thi câu lệnh SQL
+            int rowsInserted = pstmt.executeUpdate();
+
+            if (rowsInserted > 0) {
+                // Lấy book_id vừa được tạo
+                rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1); // Trả về book_id
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1; // Trả về -1 nếu có lỗi xảy ra
+    }
+
+    public boolean addBookCategory(int bookId, int categoryId) throws ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DBConnect.connect(); // Kết nối đến cơ sở dữ liệu
+
+            // Câu lệnh SQL để thêm bản ghi vào bảng BookCategory
+            String insertQuery = "INSERT INTO BookCategory (book_id, category_id) VALUES (?, ?)";
+            pstmt = conn.prepareStatement(insertQuery);
+
+            // Thiết lập các tham số cho câu lệnh SQL
+            pstmt.setInt(1, bookId);
+            pstmt.setInt(2, categoryId);
+
+            // Thực thi câu lệnh SQL
+            int rowsInserted = pstmt.executeUpdate();
+
+            // Trả về true nếu thêm thành công
+            return rowsInserted > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Book getBookByIdForAdmin(int bookId) throws ClassNotFoundException {
+        Book book = null;
+        String sql = "SELECT b.*, a.name AS authorName, bs.name AS seriesName, "
+                + "STRING_AGG(c.name, ', ') AS categories "
+                + "FROM Books b "
+                + "LEFT JOIN Author a ON b.author_id = a.author_id "
+                + "LEFT JOIN BookSeries bs ON b.series_id = bs.series_id "
+                + "LEFT JOIN BookCategory bc ON b.book_id = bc.book_id "
+                + "LEFT JOIN Category c ON bc.category_id = c.category_id "
+                + "WHERE b.book_id = ? "
+                + "GROUP BY b.book_id, b.title, b.author_id, b.description, b.price, "
+                + "b.cover_image, b.file_path, b.publisher, b.publication_year, "
+                + "b.stock_quantity, b.language, b.series_id, b.volume_number, "
+                + "b.book_type, b.created_by, b.isDelete, a.name, bs.name";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, bookId);
+            System.out.println("Executing query for book ID: " + bookId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                System.out.println("Book found in database: " + rs.getString("title"));
+                book = new Book(
+                        rs.getInt("book_id"),
+                        rs.getString("title"),
+                        rs.getInt("author_id"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getString("cover_image"),
+                        rs.getString("file_path"),
+                        rs.getString("publisher"),
+                        rs.getInt("publication_year"),
+                        rs.getInt("stock_quantity"),
+                        rs.getString("language"),
+                        rs.getInt("series_id"),
+                        rs.getInt("volume_number"),
+                        rs.getString("book_type"),
+                        rs.getInt("created_by"),
+                        rs.getBoolean("isDelete"),
+                        rs.getString("authorName"),
+                        rs.getString("seriesName"),
+                        rs.getString("categories")
+                );
+            } else {
+                System.out.println("No book found with ID: " + bookId);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return book;
+
+    }
         }
         return false;
     }
