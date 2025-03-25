@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,7 +35,9 @@ public class BookDAO {
         List<Book> list = new ArrayList<>();
         String query = "SELECT * FROM Books"; // 🔴 Lấy tất cả sách, kể cả sách ẩn
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query);  ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBConnect.connect();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 Book book = new Book(
@@ -66,7 +70,7 @@ public class BookDAO {
         List<Book> list = new ArrayList<>();
         String query = "SELECT * FROM Books WHERE title LIKE ? AND isDelete = 0";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, "%" + searchString + "%"); // Tìm kiếm tiêu đề chứa searchString
             ResultSet rs = pstmt.executeQuery();
@@ -88,8 +92,7 @@ public class BookDAO {
                         rs.getInt("volume_number"),
                         rs.getString("book_type"),
                         rs.getInt("created_by"),
-                        rs.getBoolean("isDelete")
-                );
+                        rs.getBoolean("isDelete"));
                 System.out.println("Tìm thấy sách: " + book.getTitle() + " | isDelete: " + book.getIsDelete());
                 list.add(book);
             }
@@ -128,11 +131,13 @@ public class BookDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Book book = new Book(
-                        rs.getInt("book_id"), rs.getString("title"), rs.getInt("author_id"), rs.getString("description"),
-                        rs.getDouble("price"), rs.getString("cover_image"), rs.getString("file_path"), rs.getString("publisher"),
+                        rs.getInt("book_id"), rs.getString("title"), rs.getInt("author_id"),
+                        rs.getString("description"),
+                        rs.getDouble("price"), rs.getString("cover_image"), rs.getString("file_path"),
+                        rs.getString("publisher"),
                         rs.getInt("publication_year"), rs.getInt("stock_quantity"), rs.getString("language"),
-                        rs.getInt("series_id"), rs.getInt("volume_number"), rs.getString("book_type"), rs.getInt("created_by")
-                );
+                        rs.getInt("series_id"), rs.getInt("volume_number"), rs.getString("book_type"),
+                        rs.getInt("created_by"));
                 book.setAuthorName(rs.getString("authorName"));
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
@@ -163,11 +168,13 @@ public class BookDAO {
             rs = ps.executeQuery();
             if (rs.next()) {
                 Book book = new Book(
-                        rs.getInt("book_id"), rs.getString("title"), rs.getInt("author_id"), rs.getString("description"),
-                        rs.getDouble("price"), rs.getString("cover_image"), rs.getString("file_path"), rs.getString("publisher"),
+                        rs.getInt("book_id"), rs.getString("title"), rs.getInt("author_id"),
+                        rs.getString("description"),
+                        rs.getDouble("price"), rs.getString("cover_image"), rs.getString("file_path"),
+                        rs.getString("publisher"),
                         rs.getInt("publication_year"), rs.getInt("stock_quantity"), rs.getString("language"),
-                        rs.getInt("series_id"), rs.getInt("volume_number"), rs.getString("book_type"), rs.getInt("created_by")
-                );
+                        rs.getInt("series_id"), rs.getInt("volume_number"), rs.getString("book_type"),
+                        rs.getInt("created_by"));
                 book.setAuthorName(rs.getString("authorName"));
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
@@ -219,11 +226,13 @@ public class BookDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Book book = new Book(
-                        rs.getInt("book_id"), rs.getString("title"), rs.getInt("author_id"), rs.getString("description"),
-                        rs.getDouble("price"), rs.getString("cover_image"), rs.getString("file_path"), rs.getString("publisher"),
+                        rs.getInt("book_id"), rs.getString("title"), rs.getInt("author_id"),
+                        rs.getString("description"),
+                        rs.getDouble("price"), rs.getString("cover_image"), rs.getString("file_path"),
+                        rs.getString("publisher"),
                         rs.getInt("publication_year"), rs.getInt("stock_quantity"), rs.getString("language"),
-                        rs.getInt("series_id"), rs.getInt("volume_number"), rs.getString("book_type"), rs.getInt("created_by")
-                );
+                        rs.getInt("series_id"), rs.getInt("volume_number"), rs.getString("book_type"),
+                        rs.getInt("created_by"));
                 book.setAuthorName(rs.getString("authorName"));
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
@@ -248,8 +257,10 @@ public class BookDAO {
             while (rs.next()) {
                 Map<String, String> book = new HashMap<>();
                 book.put("book_id", String.valueOf(rs.getInt("book_id"))); // Thêm ID vào Map
-                book.put("cover_image", Optional.ofNullable(rs.getString("cover_image")).orElse("./images/default-cover-book-1.jpg"));
-                book.put("description", Optional.ofNullable(rs.getString("description")).orElse("No description available."));
+                book.put("cover_image",
+                        Optional.ofNullable(rs.getString("cover_image")).orElse("./images/default-cover-book-1.jpg"));
+                book.put("description",
+                        Optional.ofNullable(rs.getString("description")).orElse("No description available."));
                 books.add(book);
             }
         } catch (Exception e) {
@@ -286,59 +297,23 @@ public class BookDAO {
     // Lấy 4 sách ngẫu nhiên, kèm tên tác giả và danh mục
     public List<Book> getTop4() {
         List<Book> list = new ArrayList<>();
-        String query = "SELECT TOP 4 b.book_id, b.title, b.cover_image, b.price, a.name AS authorName, "
-                + "MAX(i.rating) AS maxRating "
-                + "FROM Books b "
-                + "JOIN Author a ON b.author_id = a.author_id "
-                + "JOIN Interaction i ON b.book_id = i.book_id "
-                + "WHERE i.action = 'Review' AND i.rating > 0 "
-                + "GROUP BY b.book_id, b.title, b.cover_image, b.price, a.name "
-                + "ORDER BY maxRating DESC"; // Sắp xếp theo rating cao nhất
-
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
+        String query = "SELECT TOP 4 b.*, a.name AS authorName, "
+                + "(SELECT STRING_AGG(c.name, ', ') FROM BookCategory bc "
+                + " JOIN Category c ON bc.category_id = c.category_id WHERE bc.book_id = b.book_id) AS categories "
+                + "FROM Books b JOIN Author a ON b.author_id = a.author_id ORDER BY NEWID()";
         try {
             conn = new DBConnect().connect();
-            if (conn == null) {
-                System.err.println("Không thể kết nối đến database!");
-                return list; // Trả về danh sách rỗng nếu không kết nối được
-            }
-
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
-
             while (rs.next()) {
                 Book book = extractBookFromResultSet(rs);
-                if (book != null) {
-                    list.add(book);
-                } else {
-                    System.err.println("Lỗi: extractBookFromResultSet trả về null cho một record.");
-                }
+                list.add(book);
             }
-        } catch (SQLException e) {
-            System.err.println("Lỗi SQL: " + e.getMessage());
-            e.printStackTrace(); // In đầy đủ stack trace để debug
         } catch (Exception e) {
-            System.err.println("Lỗi không xác định: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
-            }
+            closeResources();
         }
-        System.out.println("getTop4() trả về danh sách có kích thước: " + list.size()); // Thêm dòng này
         return list;
     }
 
@@ -407,14 +382,14 @@ public class BookDAO {
                 rs.getInt("series_id"),
                 rs.getInt("volume_number"),
                 rs.getString("book_type"),
-                rs.getInt("created_by")
-        );
+                rs.getInt("created_by"));
         book.setAuthorName(rs.getString("authorName"));
         book.setCategories(rs.getString("categories"));
         return book;
     }
 
-    // Phương thức này sẽ tìm các sách có cùng thể loại hoặc cùng tác giả với sách hiện tại.
+    // Phương thức này sẽ tìm các sách có cùng thể loại hoặc cùng tác giả với sách
+    // hiện tại.
     public List<Book> getSimilarBooks(int bookId) throws ClassNotFoundException {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT TOP 4 b.*, a.name AS authorName, "
@@ -475,12 +450,11 @@ public class BookDAO {
         List<Book> books = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT b.*, a.name AS authorName, s.name AS seriesName, "
-                + "(SELECT STRING_AGG(c.name, ', ') FROM BookCategory bc "
-                + "JOIN Category c ON bc.category_id = c.category_id WHERE bc.book_id = b.book_id) AS categories "
-                + "FROM Books b "
-                + "JOIN Author a ON b.author_id = a.author_id "
-                + "LEFT JOIN BookSeries s ON b.series_id = s.series_id "
-        );
+                        + "(SELECT STRING_AGG(c.name, ', ') FROM BookCategory bc "
+                        + "JOIN Category c ON bc.category_id = c.category_id WHERE bc.book_id = b.book_id) AS categories "
+                        + "FROM Books b "
+                        + "JOIN Author a ON b.author_id = a.author_id "
+                        + "LEFT JOIN BookSeries s ON b.series_id = s.series_id ");
 
         // Nếu có category, thêm điều kiện lọc
         if (categoryId != null && !categoryId.isEmpty()) {
@@ -572,7 +546,7 @@ public class BookDAO {
     public boolean isBookExists(String title) throws ClassNotFoundException {
         String query = "SELECT COUNT(*) FROM Books WHERE title = ? AND isDelete = 0";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, title);
             ResultSet rs = pstmt.executeQuery();
@@ -589,7 +563,7 @@ public class BookDAO {
     public boolean deleteBook(int bookID) throws ClassNotFoundException {
         String query = "UPDATE Books SET isDelete = 1 WHERE book_id = ?";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, bookID);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -602,7 +576,7 @@ public class BookDAO {
         String query = "INSERT INTO Books (title, author, description, price, cover_image, file_path) "
                 + "VALUES (?, ?, ?, ?, ?, ?,0)";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
             if (conn != null) {
                 System.out.println("Connected to the database!");
             } else {
