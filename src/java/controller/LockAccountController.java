@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author HUUTHANH
+ * @author 
  */
 @WebServlet(urlPatterns = {"/LockAccountController"})
 public class LockAccountController extends HttpServlet {

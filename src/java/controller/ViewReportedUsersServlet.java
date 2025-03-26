@@ -11,10 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
-/**
- *
- * @author HUUTHANH
- */
+
 @WebServlet(name = "ViewReportedUsersServlet", urlPatterns = {"/viewReportedUsers"})
 public class ViewReportedUsersServlet extends HttpServlet {
 

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reported Users</title>
+    <title>Người Dùng Báo Cáo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -15,10 +15,10 @@
         <table class="table table-bordered">
             <thead class="table-warning">
                 <tr>
-                    <th>Report ID</th>
-                    <th>Username</th>
-                    <th>Lý do báo cáo</th>
-                    <th>Thời gian báo cáo</th>
+                    <th>ID báo cáo</th>
+                    <th>Tên Người Dùng</th>
+                    <th>Lý Do Báo Cáo</th>
+                    <th>Thời Gian Báo Cáo</th>
                 </tr>
             </thead>
             <tbody>

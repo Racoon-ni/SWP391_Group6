@@ -71,8 +71,8 @@
             <table class="table table-bordered text-center">
                 <thead class="table-danger">
                     <tr>
-                        <th>User ID</th>
-                        <th>Username</th>
+                        <th>ID Người Dùng</th>
+                        <th>Tên Người Dùng</th>
                         <th>Số lần cảnh báo</th>
                         <th>Thời gian cảnh báo</th>
                         <th>Hành động</th>

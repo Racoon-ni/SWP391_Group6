@@ -352,4 +352,69 @@ public class InteractionDAO {
         }
         return false;
     }
+    // Xóa comment của user (chỉ được phép xóa comment chưa bị báo cáo hoặc ẩn)
+public boolean deleteUserComment(int interactionId, int accountId) {
+    String deleteWarningsQuery = "DELETE FROM UserWarning WHERE interaction_id = ?";
+    String deleteCommentQuery = "DELETE FROM Interaction WHERE interaction_id = ? AND account_id = ? AND status = 0";
+    Connection conn = null;
+    PreparedStatement psWarnings = null;
+    PreparedStatement psComment = null;
+
+    try {
+        conn = new DBConnect().connect();
+        conn.setAutoCommit(false);
+
+        // Xóa tất cả UserWarning liên quan
+        psWarnings = conn.prepareStatement(deleteWarningsQuery);
+        psWarnings.setInt(1, interactionId);
+        psWarnings.executeUpdate();
+
+        // Xóa comment nếu đúng là user đó và status = 0
+        psComment = conn.prepareStatement(deleteCommentQuery);
+        psComment.setInt(1, interactionId);
+        psComment.setInt(2, accountId);
+        int rowsAffected = psComment.executeUpdate();
+
+        if (rowsAffected == 1) {
+            conn.commit();
+            return true;
+        } else {
+            conn.rollback();
+        }
+    } catch (SQLException | ClassNotFoundException e) {
+        e.printStackTrace();
+        try {
+            if (conn != null) conn.rollback();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    } finally {
+        try {
+            if (psWarnings != null) psWarnings.close();
+            if (psComment != null) psComment.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    return false;
+}
+// Chỉnh sửa bình luận của user
+public boolean editUserComment(int interactionId, int accountId, String newComment, double newRating) {
+    String sql = "UPDATE Interaction SET comment = ?, rating = ?, created_at = ? WHERE interaction_id = ? AND account_id = ? AND status = 0";
+    try (Connection conn = new DBConnect().connect();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, newComment);
+        ps.setDouble(2, newRating);
+        ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+        ps.setInt(4, interactionId);
+        ps.setInt(5, accountId);
+        return ps.executeUpdate() == 1;
+    } catch (SQLException | ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+
 }

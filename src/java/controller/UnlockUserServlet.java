@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author HUUTHANH
- */
+
 @WebServlet(name = "UnlockUserServlet", urlPatterns = {"/unlockUser"})
 public class UnlockUserServlet extends HttpServlet {
 
