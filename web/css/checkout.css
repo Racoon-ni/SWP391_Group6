@@ -1,0 +1,29 @@
+/* Căn giữa nội dung checkout */
+.container {
+    max-width: 800px;
+}
+
+/* Card thông tin sách */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Ảnh bìa sách */
+.card img {
+    max-height: 160px;
+    object-fit: cover;
+}
+
+/* Nút thanh toán */
+.btn-lg {
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+/* Nút cập nhật thông tin */
+.btn-outline-secondary {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+}

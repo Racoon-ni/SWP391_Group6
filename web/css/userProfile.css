@@ -11,20 +11,24 @@
     --text-color: #ffffff;
     --highlight-color: #f1c40f;
 }
+
 body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
+
 .card {
     background-color: var(--card-background);
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 .sidebar {
     background: #2c2f33 !important;
     padding: 20px !important;
     border-radius: 10px !important;
 }
+
 .sidebar a {
     display: block;
     color: var(--text-color);
@@ -35,14 +39,19 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
-.sidebar a:hover, .sidebar a.active {
+
+.sidebar a:hover,
+.sidebar a.active {
     background: var(--highlight-color);
     color: #2c2f33;
 }
+
 .sidebar-container {
     position: relative;
-    top: 2px; /* Điều chỉnh giá trị này để nâng sidebar lên */
+    top: 2px;
+    /* Điều chỉnh giá trị này để nâng sidebar lên */
 }
+
 .avatar {
     width: 150px;
     height: 150px;
@@ -52,21 +61,25 @@ body {
     transition: transform 0.3s;
     margin-bottom: 15px;
 }
+
 .avatar:hover {
     transform: scale(1.1);
 }
+
 .avatar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
 }
+
 .display-name {
     font-weight: bold;
     color: var(--highlight-color);
     font-size: 1.2rem;
     text-align: center;
 }
+
 .info-row {
     display: flex !important;
     align-items: center !important;
@@ -75,22 +88,32 @@ body {
     font-size: 14px !important;
     border-bottom: 1px solid #444 !important;
 }
+
 .info-row span {
     flex-grow: 1 !important;
 }
+
 .info-row form {
     margin: 0 !important;
 }
-.btn-warning, .btn-success, .btn-danger {
+
+.btn-warning,
+.btn-success,
+.btn-danger {
     background: #f1c40f !important;
     color: #23272A !important;
-    border-radius: 15px !important; /* Bo góc mềm mại */
-    padding: 4px 10px !important; /* Giảm kích thước */
-    font-size: 12px !important; /* Cỡ chữ nhỏ hơn */
-    font-weight: bold !important; /* Chữ đậm hơn */
+    border-radius: 15px !important;
+    /* Bo góc mềm mại */
+    padding: 4px 10px !important;
+    /* Giảm kích thước */
+    font-size: 12px !important;
+    /* Cỡ chữ nhỏ hơn */
+    font-weight: bold !important;
+    /* Chữ đậm hơn */
     transition: all 0.3s ease-in-out !important;
     border: none !important;
-    min-width: 80px; /* Đảm bảo không quá nhỏ */
+    min-width: 80px;
+    /* Đảm bảo không quá nhỏ */
     text-align: center;
 }
 
@@ -101,7 +124,8 @@ body {
 
 .btn-success {
     background: #27ae60 !important;
-    color: white !important; /* Màu chữ trắng cho dễ nhìn */
+    color: white !important;
+    /* Màu chữ trắng cho dễ nhìn */
 }
 
 .btn-success:hover {
@@ -110,16 +134,19 @@ body {
 
 .btn-danger {
     background: #e74c3c !important;
-    color: white !important; /* Màu chữ trắng */
+    color: white !important;
+    /* Màu chữ trắng */
 }
 
 .btn-danger:hover {
     background: #c0392b !important;
 }
+
 .navbar-logo {
     position: relative;
     bottom: 6px;
 }
+
 /* Notification Popup Styling */
 .notification-popup {
     position: fixed;
@@ -137,20 +164,24 @@ body {
     visibility: hidden;
     transition: opacity 0.3s, visibility 0.3s;
 }
+
 .notification-popup.success {
     background-color: #27ae60;
     color: white;
     border-left: 5px solid #219150;
 }
+
 .notification-popup.error {
     background-color: #e74c3c;
     color: white;
     border-left: 5px solid #c0392b;
 }
+
 .notification-popup.show {
     opacity: 1;
     visibility: visible;
 }
+
 .notification-popup.hide {
     opacity: 0;
     visibility: hidden;

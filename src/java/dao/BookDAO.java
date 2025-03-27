@@ -172,7 +172,10 @@ public class BookDAO {
                 book.setSeriesName(rs.getString("seriesName"));
                 book.setCategories(rs.getString("categories"));
                 book.setIsDelete(rs.getBoolean("isDelete"));
+                System.out.println("✅ Đã tìm thấy sách: " + book.getTitle());
                 return book;
+            } else {
+                System.out.println("❌ Không tìm thấy sách với ID: " + bookId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -237,16 +240,17 @@ public class BookDAO {
         return books;
     }
 
-    // Lấy 5 sách ngẫu nhiên (chỉ lấy ảnh bìa và mô tả)
+    // Lấy 5 sách ngẫu nhiên (gồm cả ID, ảnh bìa và mô tả)
     public List<Map<String, String>> getRandomBooks() {
         List<Map<String, String>> books = new ArrayList<>();
-        String query = "SELECT TOP 5 cover_image, description FROM Books ORDER BY NEWID()";
+        String query = "SELECT TOP 5 book_id, cover_image, description FROM Books ORDER BY NEWID()";
         try {
             conn = new DBConnect().connect();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Map<String, String> book = new HashMap<>();
+                book.put("book_id", String.valueOf(rs.getInt("book_id"))); // Thêm ID vào Map
                 book.put("cover_image", Optional.ofNullable(rs.getString("cover_image")).orElse("./images/default-cover-book-1.jpg"));
                 book.put("description", Optional.ofNullable(rs.getString("description")).orElse("No description available."));
                 books.add(book);
@@ -562,7 +566,7 @@ public class BookDAO {
     }
 
     public boolean addBook(Book book) throws ClassNotFoundException {
-        String query = "INSERT INTO Books (title, author, description, price, cover_image, file_path) "
+        String query = "INSERT INTO Books (title, author_id, description, price, cover_image, file_path) "
                 + "VALUES (?, ?, ?, ?, ?, ?,0)";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -580,6 +584,33 @@ public class BookDAO {
 
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public double getBookPrice(int bookId) throws ClassNotFoundException {
+        String sql = "SELECT price FROM Books WHERE book_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    public boolean updateStockQuantity(int bookId, int newQuantity) throws ClassNotFoundException {
+        String sql = "UPDATE Books SET stock_quantity = ? WHERE book_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, bookId);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

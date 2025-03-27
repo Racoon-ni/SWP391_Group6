@@ -5,6 +5,7 @@
 <%@ page import="dao.BookDAO" %>
 <%@ page import="entity.Category, dao.CategoryDAO" %> 
 <%@ page import="java.util.List, java.util.Map" %>
+
 <jsp:useBean id="bookDAO" class="dao.BookDAO" scope="request"/>
 
 <% List<Category> categories = (List<Category>) request.getAttribute("topCategories"); 
@@ -34,6 +35,7 @@
         <link rel="stylesheet" type="text/css" href="css/vendor.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link rel="stylesheet" type="text/css" href="css/home.css">
+        <link rel="stylesheet" type="text/css" href="css/button.css">
 
     </head>
 
@@ -60,7 +62,10 @@
                                     <div class="col-md-6">
                                         <h2 class="display-4 text-dark font-weight-bold">${book.title}</h2>
                                         <p class="lead text-muted">${book.description}</p>
-                                        <a href="BookDetail.jsp?bookId=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
+                                        <c:if test="${not empty book.book_id}">
+                                            <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
+                                        </c:if>
+
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +106,15 @@
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="<%= book.getCoverImage() %>" alt="<%= book.getTitle() %>" class="product-item">
-                                            <button type="button" class="add-to-cart">Add to Cart</button>
+                                            <form action="cart" method="post">
+                                                <input type="hidden" name="action" value="add">
+                                                <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <input type="hidden" name="book_format" value="Physical">
+                                                <button type="submit" class="btn-cart">Add To Cart</button>
+                                            </form>
+
+
                                         </figure>
                                         <figcaption>
                                             <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>
@@ -173,7 +186,16 @@
                                         <div class="product-item">
                                             <figure class="product-style">
                                                 <img src="<%= book.getCoverImage() %>" alt="Book Cover" class="product-item">
-                                                <button type="button" class="add-to-cart">Add to Cart</button>
+                                                <form action="cart" method="post">
+                                                    <input type="hidden" name="action" value="add">
+                                                    <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="book_format" value="Physical">
+                                                    <button type="submit" class="btn-cart">Add To Cart</button>
+                                                </form>
+
+
+
                                             </figure>
                                             <figcaption>
                                                 <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>
@@ -208,7 +230,14 @@
                                         <div class="product-item">
                                             <figure class="product-style">
                                                 <img src="<%= book.getCoverImage() %>" alt="Book Cover" class="product-item">
-                                                <button type="button" class="add-to-cart">Add to Cart</button>
+                                                <form action="cart" method="post">
+                                                    <input type="hidden" name="action" value="add">
+                                                    <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="book_format" value="Physical">
+                                                    <button type="submit" class="btn-cart">Add To Cart</button>
+                                                </form>
+
                                             </figure>
                                             <figcaption>
                                                 <h3><a href="BookDetail.jsp?book_id=<%= book.getBook_id() %>"><%= book.getTitle() %></a></h3>

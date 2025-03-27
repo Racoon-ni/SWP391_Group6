@@ -1,3 +1,8 @@
+<%-- 
+    Document   : BookDetail
+    Created on : Mar 4, 2025, 10:01:39 AM
+    Author     : SE18-CE180628-Nguyen Pham Doan Trang
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="entity.Book, dao.BookDAO, dao.UserWarningDAO, java.util.List, entity.Account, entity.Interaction, dao.InteractionDAO, java.text.SimpleDateFormat" %>
 
@@ -51,7 +56,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <!--        <link rel="stylesheet" type="text/css" href="css/style.css">-->
+        <link rel="stylesheet" type="text/css" href="css/button.css">
+
     </head>
     <body>
         <jsp:include page="Menu.jsp"/>
@@ -83,14 +90,28 @@
             <div class="row">
                 <div class="col-md-4 text-center">
                     <img src="<%= book.getCoverImage() %>" alt="<%= book.getTitle() %>" class="img-fluid rounded shadow-lg">
-                    <div class="mt-2 d-flex gap-3">
-                        <a href="CartServlet?book_id=<%= book.getBook_id() %>&action=add" class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
-                            <i class="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
-                        </a>
-                        <a href="CheckoutServlet?book_id=<%= book.getBook_id() %>" class="btn btn-light btn-lg w-50 d-flex align-items-center justify-content-center border rounded-3 shadow-sm">
-                            <i class="fas fa-credit-card me-2"></i> Mua ngay
-                        </a>
-                    </div>
+
+                    <div class="button-container">
+    <form action="cart" method="post">
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+        <input type="hidden" name="quantity" value="1">
+        <input type="hidden" name="book_format" value="Physical">
+        <button type="submit" class="btn-cart">
+            <i class="fas fa-shopping-cart"></i> Add To Cart
+        </button>
+    </form>
+
+    <form action="buy-now" method="POST">
+        <input type="hidden" name="book_id" value="<%= book.getBook_id() %>">
+        <input type="hidden" name="book_format" value="Physical">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="btn-buy">
+            <i class="fas fa-credit-card"></i> Buy Book
+        </button>
+    </form>
+</div>
+
                 </div>
 
                 <div class="col-md-8">

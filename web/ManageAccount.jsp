@@ -60,7 +60,10 @@
             <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
             <a href="manageComment"><i class="fas fa-book"></i> Quản lí bình luận</a>
             <a href="warningUsers"><i class="fas fa-exclamation-triangle"></i> Người dùng bị cảnh báo</a>
-        </div>
+            <a href="manageOrder"><i class="fas fa-box"></i> Quản lí đơn hàng</a>
+
+
+    </div>
 
         <!-- Main Content -->
         <div class="content">

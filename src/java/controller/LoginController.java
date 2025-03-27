@@ -48,7 +48,7 @@ public class LoginController extends HttpServlet {
                 }
                 HttpSession session = request.getSession();
                 session.setAttribute("account", account); // Lưu Object Account
-                session.setAttribute("accountId", account.getAccountId()); // Lưu ID
+                session.setAttribute("account_id", account.getAccountId()); // Lưu ID
 
                 session.setMaxInactiveInterval(1000);
 
