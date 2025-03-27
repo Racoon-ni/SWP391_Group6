@@ -7,8 +7,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login / Registration Form</title>
-        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
         <link rel="stylesheet" href="css/login.css">
+
+        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     </head>
 
     <body>
@@ -27,8 +30,14 @@
                     <p style="color: green;"><%= successMsg %></p>
                     <% } %>
                     <input name="username" type="text" id="username" placeholder="Username" required="" autofocus="" />
-                    <!--<input type="email" name="email" placeholder="Email" />-->
+
                     <input name="password" type="password" id="password" placeholder="Password" required="" />
+<!--
+                    <input type="password" name="currentPassword" class="form-control border-primary" required id="currentPassword">
+                    <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </button>-->
+
                     <div class="content">
                         <div class="checkbox">
                             <input type="checkbox" name="checkbox" id="checkbox" />

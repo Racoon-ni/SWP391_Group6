@@ -8,22 +8,22 @@
 
 <jsp:useBean id="bookDAO" class="dao.BookDAO" scope="request"/>
 
-<% List<Category> categories = (List<Category>) request.getAttribute("topCategories"); 
-%>
+                            <% List<Category> categories = (List<Category>) request.getAttribute("topCategories");
+                                    %>
 
-<!DOCTYPE html>
-<html lang="en">
+                                    <!DOCTYPE html>
+                                    <html lang="en">
 
-    <head>
-        <title>OBRW - Online book reading website</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="author" content="">
-        <meta name="keywords" content="">
-        <meta name="description" content="">
+                                    <head>
+                                        <title>OBRW - Online book reading website</title>
+                                        <meta charset="utf-8">
+                                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                        <meta name="format-detection" content="telephone=no">
+                                        <meta name="apple-mobile-web-app-capable" content="yes">
+                                        <meta name="author" content="">
+                                        <meta name="keywords" content="">
+                                        <meta name="description" content="">
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -37,52 +37,61 @@
         <link rel="stylesheet" type="text/css" href="css/home.css">
         <link rel="stylesheet" type="text/css" href="css/button.css">
 
-    </head>
+                                    </head>
 
-    <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">
-        <jsp:include page="Menu.jsp"></jsp:include>
+                                    <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">
+                                        <jsp:include page="Menu.jsp"></jsp:include>
 
-            <!-- Banner Carousel with 2-second interval -->
-            <!-- Billboard Section -->
-            <section id="billboard" class="py-5">
-                <div class="container">
-                    <div id="bannerCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
-                        <div class="carousel-inner">
-                        <c:forEach items="${randomBooks}" var="book" varStatus="status">
-                            <div class="carousel-item ${status.first ? 'active' : ''}">
-                                <div class="row align-items-center">
-                                    <!-- Hình ảnh bên trái -->
-                                    <div class="col-md-6 text-center">
-                                        <a href="BookDetail.jsp?book_id=${book.book_id}">
-                                            <img src="${book.cover_image}" alt="Book Cover ${status.index + 1}"
-                                                 class="img-fluid rounded shadow-lg" style="max-height: 400px;">
-                                        </a>
-                                    </div>
-                                    <!-- Nội dung bên phải -->
-                                    <div class="col-md-6">
-                                        <h2 class="display-4 text-dark font-weight-bold">${book.title}</h2>
-                                        <p class="lead text-muted">${book.description}</p>
-                                        <c:if test="${not empty book.book_id}">
-                                            <a href="BookDetail.jsp?book_id=${book.book_id}" class="btn btn-primary mt-3">Read More</a>
-                                        </c:if>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                    <!-- Carousel Controls -->
-                    <a class="carousel-control-prev" href="#bannerCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#bannerCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-            </div>
-        </section>
+                                        <!-- Banner Carousel with 2-second interval -->
+                                        <!-- Billboard Section -->
+                                        <section id="billboard" class="py-5">
+                                            <div class="container">
+                                                <div id="bannerCarousel" class="carousel slide" data-ride="carousel"
+                                                    data-interval="2000">
+                                                    <div class="carousel-inner">
+                                                        <c:forEach items="${randomBooks}" var="book" varStatus="status">
+                                                            <div class="carousel-item ${status.first ? 'active' : ''}">
+                                                                <div class="row align-items-center">
+                                                                    <!-- Hình ảnh bên trái -->
+                                                                    <div class="col-md-6 text-center">
+                                                                        <a
+                                                                            href="BookDetail.jsp?book_id=${book.book_id}">
+                                                                            <img src="${book.cover_image}"
+                                                                                alt="Book Cover ${status.index + 1}"
+                                                                                class="img-fluid rounded shadow-lg"
+                                                                                style="max-height: 400px;">
+                                                                        </a>
+                                                                    </div>
+                                                                    <!-- Nội dung bên phải -->
+                                                                    <div class="col-md-6">
+                                                                        <h2
+                                                                            class="display-4 text-dark font-weight-bold">
+                                                                            ${book.title}</h2>
+                                                                        <p class="lead text-muted">${book.description}
+                                                                        </p>
+                                                                        <a href="BookDetail.jsp?book_id=${book.book_id}"
+                                                                            class="btn btn-primary mt-3">Read More</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </c:forEach>
+                                                    </div>
+                                                    <!-- Carousel Controls -->
+                                                    <a class="carousel-control-prev" href="#bannerCarousel"
+                                                        role="button" data-slide="prev">
+                                                        <span class="carousel-control-prev-icon"
+                                                            aria-hidden="true"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="carousel-control-next" href="#bannerCarousel"
+                                                        role="button" data-slide="next">
+                                                        <span class="carousel-control-next-icon"
+                                                            aria-hidden="true"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </section>
 
         <!-- Some quality items Featured Books -->
         <!-- Featured Books -->
@@ -134,44 +143,43 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="btn-wrap align-right">
-                            <a href="allBook" class="btn-accent-arrow">
-                                View all products <i class="icon icon-ns-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="btn-wrap align-right">
+                                                                    <a href="allBook" class="btn-accent-arrow">
+                                                                        View all products <i
+                                                                            class="icon icon-ns-arrow-right"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
 
-                </div>
-            </div>
-        </section>
+                                                        </div>
+                                                    </div>
+                                        </section>
 
-        <!-- Popular Books -->
-        <section id="popular-books" class="bookshelf py-5 my-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="section-header align-center">
-                            <div class="title"><span>Some quality items</span></div>
-                            <h2 class="section-title">Popular Books</h2>
-                        </div>
+                                        <!-- Popular Books -->
+                                        <section id="popular-books" class="bookshelf py-5 my-5">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="section-header align-center">
+                                                            <div class="title"><span>Some quality items</span></div>
+                                                            <h2 class="section-title">Popular Books</h2>
+                                                        </div>
 
-                        <ul class="tabs">
-                            <li data-tab-target="#all-genre" class="active tab">All Genre</li>
-                                <% 
-                                    List<Category> topCategories = (List<Category>) request.getAttribute("topCategories");
-                                    if (topCategories != null) {
-                                        for (Category category : topCategories) { 
-                                %>
-                            <li data-tab-target="#<%= category.getCategoryName().toLowerCase().replaceAll("\\s+", "-") %>" class="tab">
-                                <%= category.getCategoryName() %>
-                            </li>
-                            <% 
-                                    }
-                                } 
-                            %>
-                        </ul>
+                                                        <ul class="tabs">
+                                                            <li data-tab-target="#all-genre" class="active tab">All
+                                                                Genre</li>
+                                                            <% List<Category> topCategories = (List<Category>)
+                                                                    request.getAttribute("topCategories");
+                                                                    if (topCategories != null) {
+                                                                    for (Category category : topCategories) {
+                                                                    %>
+                                                                    <li data-tab-target="#<%= category.getCategoryName().toLowerCase().replaceAll("\\s+", "-" ) %>" class="tab">
+                                                                        <%= category.getCategoryName() %>
+                                                                    </li>
+                                                                    <% } } %>
+                                                        </ul>
 
                         <div class="tab-content">
                             <!-- All Genres -->
@@ -266,16 +274,18 @@
 
 
 
-        <footer>
-            <jsp:include page="Footer.jsp"></jsp:include>
-        </footer>
+                                        <footer>
+                                            <jsp:include page="Footer.jsp"></jsp:include>
+                                        </footer>
 
-        <script src="js/jquery-1.11.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/script.js"></script>
+                                        <script src="js/jquery-1.11.0.min.js"></script>
+                                        <script
+                                            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+                                            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+                                            crossorigin="anonymous"></script>
+                                        <script src="js/plugins.js"></script>
+                                        <script src="js/script.js"></script>
 
-    </body>
-</html>
+                                    </body>
+
+                                    </html>

@@ -89,7 +89,7 @@ public class AccountDAO {
 
     public boolean updateAccount(int accountId, String username, String password, String email)
             throws SQLException, ClassNotFoundException {
-        String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE accountId = ?";
+        String sql = "UPDATE Account SET username = ?, password = ?, email = ? WHERE account_id = ?";
         try (Connection conn = DBConnect.connect(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -97,6 +97,23 @@ public class AccountDAO {
             stmt.setInt(4, accountId);
             return stmt.executeUpdate() > 0;
         }
+    }
+
+    public boolean updateAccount(int accountId, String full_name, String phone, String address, String image)
+            throws ClassNotFoundException {
+        String sql = "UPDATE Account SET full_name = ?, phone = ?, address = ?, image = ? WHERE account_id = ?";
+        try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, full_name);
+            ps.setString(2, phone);
+            ps.setString(3, address);
+            ps.setString(4, image);
+            ps.setInt(5, accountId);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // Phương thức cập nhật mật khẩu
@@ -175,10 +192,67 @@ public class AccountDAO {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                int count = rs.getInt(1); // lấy giá trị COUNT(*)
-                return count > 0; // nếu > 0 là đã tồn tại
+                return rs.getInt(1) > 0;
             }
+        }
+        // Nếu có kết quả và COUNT(*) > 0 thì tài khoản đã tồn tại
+        // } catch (SQLException | ClassNotFoundException e) {
+        // e.printStackTrace();
+        // }
+        return false;// Mặc định trả về false nếu có lỗi xảy ra
+    }
 
+    // Thêm tài khoản vào database
+    // public boolean addAccount(Account account) {
+    // String query = "INSERT INTO Users (username, password, email) VALUES (?, ?,
+    // ?)";
+    // try (Connection conn = DBConnect.connect();
+    // PreparedStatement pstmt = conn.prepareStatement(query)) {
+    // pstmt.setString(1, account.getUsername());
+    // pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước
+    // khi lưu
+    // pstmt.setString(3, account.getEmail());
+    // return pstmt.executeUpdate() > 0;
+    // } catch (SQLException | ClassNotFoundException e) {
+    // e.printStackTrace();
+    // }
+    // return false;
+    // }
+    // public boolean addAccount(Account account) {
+    // String query = "INSERT INTO [dbo].Account ([username], [password], [email])
+    // VALUES (?, ?, ?)";
+    // try ( Connection conn = DBConnect.connect(); PreparedStatement pstmt =
+    // conn.prepareStatement(query)) {
+    // pstmt.setString(1, account.getUsername());
+    // pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước
+    // khi lưu
+    // pstmt.setString(3, account.getEmail());
+    //
+    // System.out.println("⚡ Thực thi SQL: " + pstmt.toString()); // Debug SQL
+    // int rowsAffected = pstmt.executeUpdate();
+    //
+    // if (rowsAffected > 0) {
+    // System.out.println("✅ Tài khoản đã được thêm vào database!");
+    // } else {
+    // System.out.println("❌ Không thể thêm tài khoản!");
+    // }
+    //
+    // return rowsAffected > 0;
+    // } catch (SQLException | ClassNotFoundException e) {
+    // e.printStackTrace(); // Hiển thị lỗi SQL chi tiết
+    // }
+    // return false;
+    // }
+    // Thêm tài khoản mới vảo database
+    public boolean addAccount(Account account) {
+        String query = "INSERT INTO Account (username, password, email) VALUES (?, ?, ?)";
+        try (Connection conn = DBConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, account.getUsername());
+            pstmt.setString(2, account.getPassword()); // Bạn nên mã hóa mật khẩu trước khi lưu
+            pstmt.setString(3, account.getEmail());
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace(); // log lỗi
         }
@@ -325,5 +399,4 @@ public class AccountDAO {
         }
         return false;
     }
-
 }
