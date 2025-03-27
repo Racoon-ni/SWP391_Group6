@@ -12,21 +12,20 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+            }
             .sidebar {
                 width: 250px;
                 height: 100vh;
-                background-color: #2C3E50;
+                background: #343a40;
+                color: white;
                 padding-top: 20px;
                 position: fixed;
                 left: 0;
                 top: 0;
                 overflow-y: auto;
-            }
-
-            .sidebar h4 {
-                color: white;
-                text-align: center;
-                margin-bottom: 20px;
             }
 
             .sidebar a {
@@ -58,15 +57,17 @@
     </head>
     <body>
         <div class="d-flex">
-            <div class="sidebar">
-                <h4 class="text-center py-3">📊 Dashboard</h4>
-                <a href="Dashboard.jsp"><i class="fas fa-home"></i> Trang chủ</a>
-                <a href="#"><i class="fas fa-chart-bar"></i> Báo cáo</a>
-                <a href="adminProfile"><i class="fas fa-cog"></i> Cài đặt</a>
-                <a href="manageAccount"><i class="fas fa-user"></i> Quản lí người dùng</a>
-                <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
-            </div>
-
+             <div class="sidebar">
+            <h4 class="text-center py-3">📊 Dashboard</h4>
+            <a href="Dashboard.jsp"><i class="fas fa-home"></i> Trang chủ</a>
+            <a href="#"><i class="fas fa-chart-bar"></i> Báo cáo</a>
+            <a href="adminProfile"><i class="fas fa-cog"></i> Cài đặt</a>
+            <a href="manageAccount"><i class="fas fa-user"></i> Quản lí người dùng</a>
+            <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
+            <a href="manageOrder"><i class="fas fa-box"></i> Quản lí đơn hàng</a>
+            <a href="manageComment"><i class="fas fa-book"></i> Quản lí bình luận</a>
+            <a href="warningUsers"><i class="fas fa-exclamation-triangle"></i> Người dùng bị cảnh báo</a>
+        </div>
             <div class="container mt-4">
                 <div class="header bg-dark text-white p-2">
                     <h3>Admin Profile</h3>

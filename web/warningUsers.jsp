@@ -8,6 +8,7 @@
         <title>Danh sách người dùng bị cảnh báo</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -30,6 +31,9 @@
             }
             .sidebar a:hover {
                 background: #495057;
+            }
+             .sidebar a i {
+                margin-right: 10px;
             }
             .content {
                 margin-left: 260px;
@@ -59,9 +63,10 @@
             <h4 class="text-center py-3">📊 Dashboard</h4>
             <a href="Dashboard.jsp"><i class="fas fa-home"></i> Trang chủ</a>
             <a href="#"><i class="fas fa-chart-bar"></i> Báo cáo</a>
-            <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
+            <a href="adminProfile"><i class="fas fa-cog"></i> Cài đặt</a>
             <a href="manageAccount"><i class="fas fa-user"></i> Quản lí người dùng</a>
             <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
+            <a href="manageOrder"><i class="fas fa-box"></i> Quản lí đơn hàng</a>
             <a href="manageComment"><i class="fas fa-book"></i> Quản lí bình luận</a>
             <a href="warningUsers"><i class="fas fa-exclamation-triangle"></i> Người dùng bị cảnh báo</a>
         </div>
