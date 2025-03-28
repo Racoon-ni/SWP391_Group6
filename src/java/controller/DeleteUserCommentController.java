@@ -20,7 +20,7 @@ public class DeleteUserCommentController extends HttpServlet {
         int interactionId = Integer.parseInt(request.getParameter("id"));
         
         // Lấy accountId từ session của user đang login
-        int accountId = (int) request.getSession().getAttribute("accountId");
+        int accountId = (int) request.getSession().getAttribute("account_id");
         
         InteractionDAO dao = new InteractionDAO();
         boolean result = dao.deleteUserComment(interactionId, accountId);
