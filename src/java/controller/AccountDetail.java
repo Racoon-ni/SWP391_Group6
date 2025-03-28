@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 
 package controller;
 
-import dao.BookDAO;
+import dao.AccountDAO;
+import entity.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,7 +10,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,8 +17,8 @@ import java.util.logging.Logger;
  *
  * @author Oanh Nguyen
  */
-@WebServlet(name="DeleteBookController", urlPatterns={"/deleteBook"})
-public class DeleteBookController extends HttpServlet {
+@WebServlet(name="AccountDetail", urlPatterns={"/AccountDetail"})
+public class AccountDetail extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,19 +28,20 @@ public class DeleteBookController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException, ClassNotFoundException, SQLException {
+    throws ServletException, IOException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-             String id = request.getParameter("id");
-        BookDAO bookDAO = new BookDAO();
-        boolean deleteBook = bookDAO.deleteBook(Integer.parseInt(id));
+            int accountId = Integer.parseInt(request.getParameter("id"));
+            AccountDAO dao = new AccountDAO(); 
+            Account account = dao.getAccountByIdForAdmin(accountId);
 
-        if (deleteBook) {
-            response.sendRedirect("manageBooks");
-        } else {
-            request.setAttribute("error", "Failed to delete product");
-            request.getRequestDispatcher("manageBooks").forward(request, response);
-        }
+            if (account == null) {
+                request.setAttribute("error", "Tài khoản không tồn tại.");
+            } else {
+                request.setAttribute("account1", account);
+                request.getRequestDispatcher("accountDetail.jsp").forward(request, response);
+                
+            }
         }
     } 
 
@@ -62,9 +59,7 @@ public class DeleteBookController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DeleteBookController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(DeleteBookController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AccountDetail.class.getName()).log(Level.SEVERE, null, ex);
         }
     } 
 
@@ -81,9 +76,7 @@ public class DeleteBookController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DeleteBookController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(DeleteBookController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AccountDetail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

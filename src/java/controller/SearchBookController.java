@@ -42,7 +42,7 @@ public class SearchBookController extends HttpServlet {
             // If username is not provided, show an appropriate message or all loans
             if (search == null || search.trim().isEmpty()) {
                 request.setAttribute("error", "Please enter a username to search.");
-                request.getRequestDispatcher("manageBook").forward(request, response);
+                request.getRequestDispatcher("manageBooks").forward(request, response);
                 
             }
             

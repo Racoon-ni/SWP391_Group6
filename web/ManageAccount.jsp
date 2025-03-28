@@ -63,7 +63,7 @@
             <a href="#"><i class="fas fa-chart-bar"></i> Báo cáo</a>
             <a href="adminProfile"><i class="fas fa-cog"></i> Cài đặt</a>
             <a href="manageAccount"><i class="fas fa-user"></i> Quản lí người dùng</a>
-            <a href="manageBook"><i class="fas fa-book"></i> Quản lí sách</a>
+            <a href="manageBooks"><i class="fas fa-book"></i> Quản lí sách</a>
             <a href="manageOrder"><i class="fas fa-box"></i> Quản lí đơn hàng</a>
             <a href="manageComment"><i class="fas fa-book"></i> Quản lí bình luận</a>
             <a href="warningUsers"><i class="fas fa-exclamation-triangle"></i> Người dùng bị cảnh báo</a>
@@ -106,10 +106,8 @@
                             </td>
                             <td>
                                 <a href="editAccount.jsp?id=${acc.accountId}" class="btn btn-success btn-sm">Edit</a>
-                                <a href="detailsAccount.jsp?id=${acc.accountId}" class="btn btn-info btn-sm">Details</a>
-                                <c:if test="${!acc.role}">
-                                    <a href="deleteAccount?id=${acc.accountId}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
-                                </c:if>
+                                <a href="AccountDetail?id=${acc.accountId}" class="btn btn-info btn-sm">Details</a>
+                               
                                 <c:choose>
                                     <c:when test="${acc.status == 1}">
                                         <a href="LockAccountController?id=${acc.accountId}" class="btn btn-lock btn-sm" onclick="return confirm('Are you sure?')">Lock</a>

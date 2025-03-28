@@ -1,96 +1,63 @@
-<%-- 
-    Document   : AddBook
-    Created on : Mar 4, 2025, 5:15:40 PM
-    Author     : Oanh Nguyen
---%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Book Entry Form</title>
-        <!-- <link rel="stylesheet" href="addBook.css"> -->
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-            }
-            .container {
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                width: 400px;
-            }
-            h2 {
-                text-align: center;
-                color: #333;
-            }
-            label {
-                font-weight: bold;
-                display: block;
-                margin-top: 10px;
-            }
-            input, textarea {
-                width: 100%;
-                padding: 8px;
-                margin-top: 5px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
-            input[type="submit"] {
-                background-color: #28a745;
-                color: white;
-                border: none;
-                padding: 10px;
-                margin-top: 15px;
-                cursor: pointer;
-                font-size: 16px;
-            }
-            input[type="submit"]:hover {
-                background-color: #218838;
-            }
-        </style>
-    </head>
-
-    <body>
-        <div class="container">
-            <h2>Book Entry Form</h2>
-            <c:if test="${not empty error}">
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sách</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Thêm Sách Mới</h2>
+         <c:if test="${not empty error}">
                 <div style="color: red; text-align: center; margin-bottom: 15px;">
                     ${error}
                 </div>
             </c:if>
-            <form action="addBook" method="post">
-                <label for="title">Title:</label>
-                <input type="text" id="title" value="${list.title}" name="title" required>
+        <form action="AddBookController" method="POST" >
+            <div class="form-group">
+                <label for="title">Tiêu Đề (Title):</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="author">Tác Giả (Author):</label>
+                <input type="text" class="form-control" id="author" name="author" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Mô Tả (Description):</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Giá (Price):</label>
+                <input type="number" class="form-control" id="price" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="coverImage">Hình Ảnh Bìa (Cover Image):</label>
+                <input type="url" class="form-control" id="coverImage" name="coverImage" required>
+            </div>
+            <div class="form-group">
+                <label for="filePath">Đường Dẫn Tệp (File Path):</label>
+                <input type="text" class="form-control" id="filePath" name="filePath" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Danh Mục (Category):</label>
+                <input type="text" class="form-control" id="category" name="category" required>
+            </div>
+            <div class="form-group">
+                <label for="bookType">Loại Sách (Book Type):</label>
+                <select class="form-control" id="bookType" name="bookType" required>
+                    <option value="Physical">Sách Vật Lý (Physical)</option>
+                    <option value="EBook">Sách Điện Tử (EBook)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Thêm Sách</button>
+        </form>
+    </div>
 
-                <label for="author">Author:</label>
-                <input type="text" id="author" value="${list.author}" name="author" required>
-
-                <label for="description">Description:</label>
-                <input id="description" value="${list.description}" name="description"></input>                
-
-                <label for="price">Price:</label>
-                <input type="number" step="0.01" value="${list.price}"id="price" min="1" name="price">
-
-                <label for="cover_image">Cover Image (URL):</label>
-                <input type="url" id="cover_image" value="${list.cover_image}"name="cover_image">
-
-                <label for="file_path">File Path:</label>
-                <input type="url" id="file_path" value="${list.file_path}" name="file_path">
-
-
-
-                <input type="submit" value="Save Book">
-            </form>
-
-        </div>
-    </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
-

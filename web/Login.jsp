@@ -44,7 +44,7 @@
                             <label>Remember me</label>
                         </div>
                         <div class="pass-link">
-                            <a href="forgotPassword.jsp">Forgot your password?</a>
+                            <a href="ForgotPassword.jsp">Forgot your password?</a>
                         </div>
                     </div>
                     <%

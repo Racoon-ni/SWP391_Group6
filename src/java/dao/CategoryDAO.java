@@ -20,6 +20,11 @@ public class CategoryDAO {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
+    public CategoryDAO() {
+    }
+    
+    
+    
     public List<Category> getTopCategories() throws ClassNotFoundException {
         List<Category> categories = new ArrayList<>();
         String query = "SELECT TOP (5) c.category_id, c.name, COUNT(bc.book_id) AS book_count "

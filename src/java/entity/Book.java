@@ -1,12 +1,12 @@
 package entity;
 
+import java.util.List;
+
 /**
  * Lớp Book đại diện cho thực thể sách trong hệ thống.
  *
  * @author SE18-CE180628-Nguyen Pham Doan Trang
  */
-
-
 public class Book {
 
     private int book_id;
@@ -27,14 +27,39 @@ public class Book {
     private boolean isDelete;
 
     // Các thuộc tính mới cần thêm
-    private String authorName;  // Tên tác giả
-    private String seriesName;  // Tên bộ sách (nếu có)
-    private String categories;  // Danh mục sách (dạng chuỗi cách nhau bằng dấu phẩy)
+    private String authorName; // Tên tác giả
+    private String seriesName; // Tên bộ sách (nếu có)
+    private String categories; // Danh mục sách (dạng chuỗi cách nhau bằng dấu phẩy)
+
+    public Book(int bookId, String title, int authorId, String description, double price,
+            String coverImage, String filePath, String publisher, int publicationYear,
+            int stockQuantity, String language, int seriesId, int volumeNumber,
+            String bookType, int createdBy, boolean isDelete,
+            String authorName, String seriesName, String categories) {
+        this.book_id = bookId;
+        this.title = title;
+        this.authorId = authorId;
+        this.description = description;
+        this.price = price;
+        this.coverImage = coverImage;
+        this.filePath = filePath;
+        this.publisher = publisher;
+        this.publicationYear = publicationYear;
+        this.stockQuantity = stockQuantity;
+        this.language = language;
+        this.seriesId = seriesId;
+        this.volumeNumber = volumeNumber;
+        this.bookType = bookType;
+        this.createdBy = createdBy;
+        this.isDelete = isDelete;
+        this.authorName = authorName;
+        this.seriesName = seriesName;
+        this.categories = categories;
+    }
 
     public Book() {
     }
-    
-    
+
     // Constructor đầy đủ
     public Book(int book_id, String title, int authorId, String description, double price,
             String coverImage, String filePath, String publisher, int publicationYear,
@@ -57,7 +82,23 @@ public class Book {
         this.createdBy = createdBy;
     }
 
-    public Book(int book_id, String title, int authorId, String description, double price, String coverImage, String filePath, String publisher, int publicationYear, int stockQuantity, String language, int seriesId, int volumeNumber, String bookType, int createdBy, boolean isDelete) {
+    public Book(int book_id, String title, String authorName, String description, double price,
+            String coverImage, String filePath, String categories, String bookType) {
+        this.book_id = book_id;
+        this.title = title;
+        this.authorName = authorName;
+        this.description = description;
+        this.price = price;
+        this.coverImage = coverImage;
+        this.filePath = filePath;
+        this.categories = categories;
+        this.bookType = bookType;
+
+    }
+
+    public Book(int book_id, String title, int authorId, String description, double price, String coverImage,
+            String filePath, String publisher, int publicationYear, int stockQuantity, String language, int seriesId,
+            int volumeNumber, String bookType, int createdBy, boolean isDelete) {
         this.book_id = book_id;
         this.title = title;
         this.authorId = authorId;
@@ -74,17 +115,19 @@ public class Book {
         this.bookType = bookType;
         this.createdBy = createdBy;
         this.isDelete = isDelete;
-        
+
     }
 
-    
-    
-    public Book(int aInt, String string, String string0, String string1, double aDouble, String string2, String string3, int aInt0) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Book(int aInt, String string, String string0, String string1, double aDouble, String string2, String string3,
+            int aInt0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                       // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public Book(int aInt, String string, String string0, String string1, double aDouble, String string2, String string3) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Book(int aInt, String string, String string0, String string1, double aDouble, String string2,
+            String string3) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                       // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     // Getter & Setter cho các thuộc tính mới
@@ -240,5 +283,5 @@ public class Book {
     public void setIsDelete(boolean isDelete) {
         this.isDelete = isDelete;
     }
-    
+
 }
