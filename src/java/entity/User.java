@@ -8,7 +8,7 @@ package entity;
  *
  * @author SE18-CE180628-Nguyen Pham Doan Trang
  */
-public class User {
+public class User extends Account {
 
     private int accountId;
     private String username;

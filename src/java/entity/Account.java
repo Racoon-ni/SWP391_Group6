@@ -15,10 +15,39 @@ public class Account {
     private String password;
     private String email;
     private boolean role; // true: admin, false: user
-
+    private String fullName;
+    private String phone;
+    private String address;
+    private String image;
+    
     public Account() {
     }
 
+    public Account(int accountId, String username, String password, String email, boolean role, String fullName, String phone, String address, String image) {
+        this.accountId = accountId;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.address = address;
+        this.image = image;
+    }
+    
+    
+    public Account(int accountId, String username, String email, boolean role, String fullName, String phone, String address, String image) {
+        this.accountId = accountId;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.address = address;
+        this.image = image;
+    }
+    
+    
     public Account(int accountId, String username, String password, String email, boolean role) {
         this.accountId = accountId;
         this.username = username;
@@ -27,9 +56,6 @@ public class Account {
         this.role = role;
     }
 
-    public Account(String username, String password, String email) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     public int getAccountId() {
         return accountId;
@@ -70,6 +96,41 @@ public class Account {
     public void setRole(boolean role) {
         this.role = role;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String full_name) {
+        this.fullName = full_name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+
+    
      
     
     

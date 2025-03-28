@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Oanh Nguyen
  */
-@WebServlet(name = "AddBookController", urlPatterns = {"/addBook"})
+@WebServlet(name = "AddBookController", urlPatterns = {"/AddBookController"})
 public class AddBookController extends HttpServlet {
 
     /**
@@ -42,24 +42,29 @@ public class AddBookController extends HttpServlet {
         try ( PrintWriter out = response.getWriter()) {
             // Get data from the form
             String title = request.getParameter("title");
-            String author = request.getParameter("author");
-            String description = request.getParameter("description");
-            String priceStr = request.getParameter("price");
-            String coverImage = request.getParameter("cover_image");
-            String filePath = request.getParameter("file_path");
+        String author = request.getParameter("author");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
+        String coverImage = request.getParameter("coverImage");
+        String filePath = request.getParameter("filePath");
+        String category = request.getParameter("category");
+        String bookType = request.getParameter("bookType");
 //            String category = request.getParameter("category");
-            Book book = new Book(1, title, author, description, Double.parseDouble(priceStr), coverImage, filePath,0);
+            Book book = new Book(0, title, author, description, price, coverImage, filePath, category, bookType);
             BookDAO bookDAO = new BookDAO();
-
-            boolean isExists = bookDAO.isBookExists(title);
+           
+            boolean isExists = bookDAO.isBookExists(title,bookDAO.getAuthorIdByName(author));
             if (isExists) {
-                request.setAttribute("list", book);
-                request.setAttribute("error", "Exists");
+                
+                request.setAttribute("error", "Duplicate");
                 request.getRequestDispatcher("AddBook.jsp").forward(request, response);
-            }
-            boolean isAdded = bookDAO.addBook(book);
-
-            if (isAdded) {
+            } 
+            int idAuthor= bookDAO.addAuthor(author);
+            
+            int idCategory= bookDAO.addCategory(category);
+            int isAdded = bookDAO.addBook(book,idAuthor);
+            boolean add= bookDAO.addBookCategory(isAdded, idCategory);
+            if (add) {
                 request.setAttribute("error", "Add successful");
                 request.getRequestDispatcher("AddBook.jsp").forward(request, response);
             } else {
