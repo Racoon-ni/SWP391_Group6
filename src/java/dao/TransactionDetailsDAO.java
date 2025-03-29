@@ -53,7 +53,7 @@ public class TransactionDetailsDAO {
         List<TransactionDetails> transactions = new ArrayList<>();
         String sql = "SELECT td.transaction_detail_id, td.transaction_id, td.book_id, "
                 + "td.quantity, td.book_format, td.price, td.file_path, "
-                + "t.total_price, t.payment_method, t.transaction_date, t.status, t.is_paid, "
+                + "t.total_price, t.payment_method, t.transaction_date, t.status, t.is_paid, t.shipping_address, "
                 + "b.title AS book_title, b.author_id, b.description, b.cover_image, "
                 + "b.publisher, b.publication_year, b.language, b.book_type "
                 + "FROM TransactionDetails td "
@@ -65,7 +65,10 @@ public class TransactionDetailsDAO {
             ps.setInt(1, userId);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    transactions.add(mapResultSetToTransactionDetails(rs));
+                    TransactionDetails details = mapResultSetToTransactionDetails(rs);
+                    details.setStatus(rs.getString("status"));
+                    details.setShippingAddress(rs.getString("shipping_address"));
+                    transactions.add(details);
                 }
             }
         } catch (Exception e) {
@@ -126,6 +129,38 @@ public class TransactionDetailsDAO {
 
         return null; // Trả về null nếu không tìm thấy địa chỉ
     }
+      public void CreateTransactionDetail(TransactionDetails transactionDetails) {
+        String sql = "INSERT INTO [dbo].[TransactionDetails]\n" +
+                    "           ([transaction_id]\n" +
+                    "           ,[book_id]\n" +
+                    "           ,[quantity]\n" +
+                    "           ,[book_format]\n" +
+                    "           ,[price]\n" +
+                    "           ,[file_path])\n" +
+                    "     VALUES\n" +
+                    "           (?\n" +
+                    "           ,?\n" +
+                    "           ,?\n" +
+                    "           ,?\n" +
+                    "           ,?\n" +
+                    "           ,?)";
+
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, transactionDetails.getTransactionId());
+            ps.setInt(2, transactionDetails.getBook_id());
+            ps.setInt(3, transactionDetails.getQuantity());
+            ps.setString(4, transactionDetails.getBookFormat());
+            ps.setDouble(5, transactionDetails.getPrice());
+            ps.setString(6, transactionDetails.getFilePath());
+           
+            ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ; 
+    }
+    
 
     // Phương thức hỗ trợ để map ResultSet thành TransactionDetails
     private TransactionDetails mapResultSetToTransactionDetails(ResultSet rs) throws SQLException {

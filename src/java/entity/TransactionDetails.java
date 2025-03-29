@@ -15,6 +15,7 @@ public class TransactionDetails {
     private String filePath; // For Ebook only
     private String shippingAddress; // New field for shipping address
     private String transactionDate; // Added transaction date field
+    private String status;
 
     public TransactionDetails() {
     }
@@ -103,4 +104,14 @@ public class TransactionDetails {
     public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
 }

@@ -1,14 +1,17 @@
 // src/controller/PlaceOrderController.java
 package controller;
 
+import dao.BookDAO;
 import dao.CartDAO;
 import dao.OrderDAO;
 import dao.TransactionDAO;
+import dao.TransactionDetailsDAO;
 import entity.Account;
 import entity.Book;
 import entity.CartItem;
 import entity.Order;
 import entity.OrderItem;
+import entity.TransactionDetails;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -48,8 +51,12 @@ public class PlaceOrderController extends HttpServlet {
             OrderDAO orderDAO = new OrderDAO();
             TransactionDAO transactionDAO = new TransactionDAO();
             CartDAO cartDAO = new CartDAO();
+            TransactionDetailsDAO transactionDetailsDAO = new TransactionDetailsDAO();
+            BookDAO bookDAO = new BookDAO();
+            
 
             List<OrderItem> orderItems = new ArrayList<>();
+            List<TransactionDetails> transactionDetailses = new ArrayList<>();
             double totalPrice = 0;
 
             // ✅ Mua từ giỏ hàng
@@ -64,6 +71,17 @@ public class PlaceOrderController extends HttpServlet {
                     orderItem.setPrice(item.getPrice());
                     orderItem.setQuantity(item.getQuantity());
                     orderItems.add(orderItem);
+                    
+                    Book b = bookDAO.getBookById(item.getBook_id());
+                    
+                    TransactionDetails transactionDetails = new TransactionDetails();
+                    transactionDetails.setBook_id(item.getBook_id());
+                    transactionDetails.setBookFormat(item.getBook_format());
+                    transactionDetails.setPrice(item.getPrice());
+                    transactionDetails.setQuantity(item.getQuantity());
+                    transactionDetails.setFilePath(b.getFilePath());
+                    
+                    transactionDetailses.add(transactionDetails);
                 }
             } else {
                 // ✅ Mua ngay 1 cuốn
@@ -84,10 +102,26 @@ public class PlaceOrderController extends HttpServlet {
                 orderItem.setPrice(selectedBook.getPrice());
                 orderItem.setQuantity(quantity);
                 orderItems.add(orderItem);
+                
+                //Book b = bookDAO.getBookById(item.getBook_id());
+                    
+                TransactionDetails transactionDetails = new TransactionDetails();
+                transactionDetails.setBook_id(selectedBook.getBook_id());
+                transactionDetails.setBookFormat(format);
+                transactionDetails.setPrice(selectedBook.getPrice());
+                transactionDetails.setQuantity(quantity);
+                transactionDetails.setFilePath(selectedBook.getFilePath());
+
+                transactionDetailses.add(transactionDetails);
             }
 
-            int transactionId = transactionDAO.createTransaction(account.getAccount_id(), totalPrice, paymentMethod);
-
+            int transactionId = transactionDAO.createTransaction(account.getAccount_id(), totalPrice, paymentMethod,shippingAddress);
+            
+            for (TransactionDetails transDetail : transactionDetailses) {
+                transDetail.setTransactionId(transactionId);
+                transactionDetailsDAO.CreateTransactionDetail(transDetail);
+            }
+            
             Order order = new Order();
             order.setAccountId(account.getAccount_id());
             order.setTransactionId(transactionId);

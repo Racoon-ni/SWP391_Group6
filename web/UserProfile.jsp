@@ -222,7 +222,7 @@
                                            for (TransactionDetails trans : transactionDetails) {
                                            Book book = bookDAO.getBookById(trans.getBook_id());
                                            String shipping = transactionDetailsDAO.getShippingAddress(trans.getTransactionId());
-                                           trans.setShippingAddress(shipping); // Gán địa chỉ vào object TransactionDetails
+                                           //trans.setShippingAddress(shipping); // Gán địa chỉ vào object TransactionDetails
                                         %>
 
 
@@ -262,7 +262,10 @@
                                                         <strong>Số lượng:</strong> <%= trans.getQuantity() %><br>
                                                         <strong>Giá:</strong> $ <%= trans.getPrice() %><br>
                                                         <strong>Địa chỉ giao hàng:</strong> <%= trans.getShippingAddress() != null ? trans.getShippingAddress() : "Không có" %><br>
-                                                        <strong>Ngày giao dịch:</strong> <%= trans.getTransactionDate() != null ? trans.getTransactionDate() : "Không có" %>
+                                                        <strong>Ngày giao dịch:</strong> <%= trans.getTransactionDate() != null ? trans.getTransactionDate() : "Không có" %><br>
+                                                        <% if ("Cancelled".equals(trans.getStatus())) { %>
+                                                            <strong class="text-danger">Đã Hủy</strong>
+                                                        <% } %>
                                                     </p>
                                                 </div>
                                             </div>

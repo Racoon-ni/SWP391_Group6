@@ -1,6 +1,8 @@
 package controller;
 
 import dao.OrderDAO;
+import dao.TransactionDAO;
+import entity.Order;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -26,8 +28,12 @@ public class CancelOrderController extends HttpServlet {
 
         try {
             int orderId = Integer.parseInt(orderIdStr);
-            String currentStatus = orderDAO.getOrderById(orderId).getStatus();
-
+            Order o = orderDAO.getOrderById(orderId);
+            TransactionDAO transactionDAO = new TransactionDAO();
+            String currentStatus = o.getStatus();
+            int tracsactionID = o.getTransactionId();
+            transactionDAO.updateTransactionStatus(tracsactionID, "Cancelled");
+            
             if ("Pending".equals(currentStatus) || "Processing".equals(currentStatus)) {
                 orderDAO.updateOrderStatus(orderId, "Cancelled");
             }
