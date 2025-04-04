@@ -74,8 +74,18 @@
                                                         </c:if>
 
                                                         <c:if test="${not empty sessionScope.account}">
-                                                            <a class="nav-link" href="UserProfile.jsp"><i
-                                                                    class="fa-solid fa-user"></i></a>
+                                                            <div class="dropdown">
+                                                                <button class="btn dropdown-toggle" type="button"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa-solid fa-user"></i> Tài khoản
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item"
+                                                                            href="UserProfile.jsp">Hồ sơ</a></li>
+                                                                    <li><a class="dropdown-item"
+                                                                            href="logout">Logout</a></li>
+                                                                </ul>
+                                                            </div>
                                                         </c:if>
 
                                                         <a href="#" class="cart for-buy"><i
@@ -155,11 +165,10 @@
                                                         </ul>
 
                                                         </li>
-
-                                                        <li class="menu-item"><a class="nav-link"
-                                                                href="UserProfile.jsp">Hồ sơ</a></li>
-                                                        <li class="menu-item"><a class="nav-link"
-                                                                href="logout">Logout</a></li>
+                                                        <!--
+                                                                                <li class="menu-item"><a class="nav-link" href="UserProfile.jsp">Hồ sơ</a></li>
+                                                                                <li class="menu-item"><a class="nav-link" href="logout">Logout</a></li>
+                                        -->
                                                         </ul>
                                                 </div>
                                                 </nav>
