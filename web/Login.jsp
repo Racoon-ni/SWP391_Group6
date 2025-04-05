@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
     <head>
         <meta charset="UTF-8">
@@ -10,7 +10,8 @@
         <link rel="stylesheet" href="css/login.css">
 
         <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            integrity="YOUR_INTEGRITY_HASH" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     </head>
 
@@ -25,45 +26,34 @@
                 </c:if>
                 <form action="login" method="post" onsubmit="">
                     <h1>Login here.</h1>
-                    <% String successMsg = (String) request.getAttribute("successMsg"); %>
-                    <% if (successMsg != null) { %>
-                    <p style="color: green;"><%= successMsg %></p>
-                    <% } %>
-                    <input name="username" type="text" id="username" placeholder="Username" required="" autofocus="" />
+                    <% String successMsg=(String) request.getAttribute("successMsg"); %>
+                        <% if (successMsg !=null) { %>
+                            <p style="color: green;">
+                                <%= successMsg %>
+                            </p>
+                            <% } %>
+                                <input name="username" type="text" id="username" placeholder="Username" required=""
+                                    autofocus="" />
 
-                    <input name="password" type="password" id="password" placeholder="Password" required="" />
-<!--
+                                <input name="password" type="password" id="password" placeholder="Password"
+                                    required="" />
+                                <!--
                     <input type="password" name="currentPassword" class="form-control border-primary" required id="currentPassword">
                     <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
                         <i class="fa fa-eye" aria-hidden="true"></i>
                     </button>-->
 
-                    <div class="content">
-                        <div class="checkbox">
-                            <input type="checkbox" name="checkbox" id="checkbox" />
-                            <label>Remember me</label>
-                        </div>
-                        <div class="pass-link">
-                            <a href="ForgotPassword.jsp">Forgot your password?</a>
-                        </div>
-                    </div>
-                    <%
-                    String error = request.getParameter("error");
-                    if ("invalid".equals(error)) {
-                    %>
-                    <script>alert('Wrong username or password!');</script>
-                    <%
-                        } else if ("locked".equals(error)) {
-                    %>
-                    <script>alert('Your account has been locked, please contact admin to unlock!');</script>
-                    <%
-                        }
-                    %>
-                    <button type="submit">Login</button>
-                    <span>or use your account</span>
-                    <div class="social-contaniner">
-                        <a href="#" class="social"><i class="lni lni-google"></i></a>
-                    </div>
+                                <div class="content">
+                                    <div class="pass-link">
+                                        <a href="ForgotPassword.jsp">Forgot your password?</a>
+                                    </div>
+                                </div>
+                                <% String error=request.getParameter("error"); if ("invalid".equals(error)) { %>
+                                    <script>alert('Wrong username or password!');</script>
+                                    <% } else if ("locked".equals(error)) { %>
+                                        <script>alert('Your account has been locked, please contact admin to unlock!');</script>
+                                        <% } %>
+                                            <button type="submit">Login</button>
                 </form>
             </div>
 
@@ -93,38 +83,39 @@
         <script src="js/login.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
         <script>
-                        function validateForm() {
-                            var username = document.getElementById("inputEmail").value;
-                            var password = document.getElementById("inputPassword").value;
+            function validateForm() {
+                var username = document.getElementById("inputEmail").value;
+                var password = document.getElementById("inputPassword").value;
 
-                            if (username.trim() === "" || password.trim() === "") {
-                                alert("Please enter both username and password");
-                                return false;
-                            }
-                            return true;
-                        }
+                if (username.trim() === "" || password.trim() === "") {
+                    alert("Please enter both username and password");
+                    return false;
+                }
+                return true;
+            }
 
-                        function toggleResetPswd(e) {
-                            e.preventDefault();
-                            $('#logreg-forms .form-signin').toggle();
-                            $('#logreg-forms .form-reset').toggle();
-                        }
+            function toggleResetPswd(e) {
+                e.preventDefault();
+                $('#logreg-forms .form-signin').toggle();
+                $('#logreg-forms .form-reset').toggle();
+            }
 
-                        function toggleSignUp(e) {
-                            e.preventDefault();
-                            $('#logreg-forms .form-signin').toggle();
-                            $('#logreg-forms .form-signup').toggle();
-                        }
+            function toggleSignUp(e) {
+                e.preventDefault();
+                $('#logreg-forms .form-signin').toggle();
+                $('#logreg-forms .form-signup').toggle();
+            }
 
-                        $(() => {
-                            $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
-                            $('#logreg-forms #cancel_reset').click(toggleResetPswd);
-                            $('#logreg-forms #btn-signup').click(toggleSignUp);
-                            $('#logreg-forms #cancel_signup').click(toggleSignUp);
-                        })
+            $(() => {
+                $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
+                $('#logreg-forms #cancel_reset').click(toggleResetPswd);
+                $('#logreg-forms #btn-signup').click(toggleSignUp);
+                $('#logreg-forms #cancel_signup').click(toggleSignUp);
+            })
         </script>
     </body>
 
-</html>
+    </html>
